@@ -1,2 +1,2 @@
 # IntroSE_21TN
-Đây là code của em Ân
+Đây là code của em AnGaRu
