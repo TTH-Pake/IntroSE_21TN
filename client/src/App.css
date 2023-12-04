@@ -5,4 +5,8 @@
   box-sizing: border-box;
 }
 
+/* Thêm kiểu tùy chỉnh */
+th {
+  background-color: #34495e;
 
+}

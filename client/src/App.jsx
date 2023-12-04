@@ -11,6 +11,7 @@ import ResetPassword from "./views/resetPassword";
 import Others from "./views/Others";
 import RecipeDetail from "./views/RecipeDetail";
 import Search from "./views/search";
+import AccountManage from "./views/AccountManage";
 import { useEffect, useState } from "react";
 import { handleGetUser } from "./action/accountAction";
 import { UserContext } from "./context/userContext";
@@ -109,6 +110,7 @@ function App() {
             <Route path="/recipes/:recipeId" element={<RecipeDetail />} />
             <Route path="/recipes/" element={<RecipeDetail />} />
             <Route path="/details" element={<RecipeDetail />} />
+            <Route path="/accountManage" element={<AccountManage />} />
             <Route path="/search" element={<Search />} />
           </Routes>
         </HandleLoginStatus>
