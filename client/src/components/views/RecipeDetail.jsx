@@ -15,10 +15,7 @@ import { message } from "antd";
 import axios from "axios";
 import { handleGetRelatedRecipes } from "../../action/recipesAction";
 import { handleGetCommentsByRecipeId } from "../../action/recipesAction";
-import Loading from "../modules/Loading";
-import Comment from "../modules/Comment.jsx";
 import CommentInput from "../modules/CommentInput.jsx"
-import RelatedRecipes from "../modules/RelatedRecipes.jsx";
 
 
 import { Bookmark, Clock, SendIcon, Share, chatIcon } from "../../assets";
