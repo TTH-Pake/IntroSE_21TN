@@ -150,7 +150,13 @@ const getCommentsByRecipeId = async (req, res) => {
   try {
     const recipeId = req.params.id;
 
-    const comments = await Comment.find({ recipe_id: recipeId }).limit(5);
+    const comments = await Comment.find({ recipe_id: recipeId })
+      .limit(5)
+      .populate({
+        path: 'user_id',
+        model: 'users',
+        select: 'name',
+      });;
 
     res.json({ success: true, comments });
   } catch (error) {

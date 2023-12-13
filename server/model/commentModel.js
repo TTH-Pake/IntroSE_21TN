@@ -7,7 +7,8 @@ const commentSchema = new Schema({
     unique: true,
   },
   user_id: {
-    type: Number,
+    type: Schema.Types.ObjectId,  // Change the type to ObjectId
+    ref: "users",  // Reference the users model
     required: true,
   },
   recipe_id: {
@@ -19,7 +20,7 @@ const commentSchema = new Schema({
     type: Date,
     default: Date.now,
   }
-})
+});
 
 commentSchema.pre('save', async function (next) {
   if (!this.id) {
@@ -28,6 +29,5 @@ commentSchema.pre('save', async function (next) {
   }
   next();
 });
-
 
 module.exports = mongoose.model("comments", commentSchema);
