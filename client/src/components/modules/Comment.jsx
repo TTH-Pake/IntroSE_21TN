@@ -4,27 +4,25 @@ import avatarIcon from "/src/assets/avatar.png";
 import PropTypes from 'prop-types';
 import { handleGetCommentsByRecipeId } from "../../action/recipesAction";
 
-const Comment = ({ recipeId }) => {
-    const [comments, setComments] = useState([]);
+const Comment = ({ comments }) => {
+    // useEffect(() => {
+    //     const fetchComments = async () => {
+    //         try {
+    //             const result = await handleGetCommentsByRecipeId(recipeId);
 
-    useEffect(() => {
-        const fetchComments = async () => {
-            try {
-                const result = await handleGetCommentsByRecipeId(recipeId);
+    //             if (result.success === true) {
+    //                 setComments(result.comments);
+    //             } else {
+    //                 message.error(result.message);
+    //             }
+    //         } catch (err) {
+    //             console.log(err);
+    //             message.error('Failed to get comments');
+    //         }
+    //     };
 
-                if (result.success === true) {
-                    setComments(result.comments);
-                } else {
-                    message.error(result.message);
-                }
-            } catch (err) {
-                console.log(err);
-                message.error('Failed to get comments');
-            }
-        };
-
-        fetchComments();
-    }, [recipeId]);
+    //     fetchComments();
+    // }, [recipeId]);
 
     return (
         <div>
@@ -38,7 +36,7 @@ const Comment = ({ recipeId }) => {
                                 className="h-8 w-8 rounded-full mr-3 mt-1"
                             />
                             <div>
-                                <p className="font-bold">{comment.user_id}</p>
+                                <p className="font-bold">{comment.user_id.name}</p>
                                 <p>{comment.content}</p>
 
                             </div>
@@ -52,9 +50,9 @@ const Comment = ({ recipeId }) => {
     );
 };
 
-Comment.propTypes = {
-    recipeId: PropTypes.string.isRequired,
-};
+// Comment.propTypes = {
+//     recipeId: PropTypes.string.isRequired,
+// };
 
 export default Comment;
 

@@ -7,9 +7,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../modules/Navbar.jsx";
 import Footer from "../modules/Footer";
 import { handleSearchRecipesID } from "../../action/recipesAction";
+import { handleGetCommentsByRecipeId } from "../../action/recipesAction";
 import Loading from "../modules/Loading";
 import Comment from "../modules/Comment.jsx";
+import CommentInput from "../modules/CommentInput.jsx"
 import RelatedRecipes from "../modules/RelatedRecipes.jsx";
+
 
 import { Bookmark, Clock, SendIcon, Share, chatIcon } from "../../assets";
 import "./Profile.css";
@@ -20,6 +23,8 @@ import { handleGetRelatedRecipes } from "../../action/recipesAction";
 import { notify_fail, notify_success, Toast_Container } from "../../toast";
 import { checkAuth } from "../../action/accountAction";
 
+
+
 export const RecipeDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,6 +33,43 @@ export const RecipeDetail = () => {
   const [recipe, setRecipe] = React.useState(null);
   const [relatedRecipes, setRelatedRecipes] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [user, setUser] = React.useState(null);
+  const [comments, setComments] = React.useState([]);
+
+
+  const fetchComments = async () => {
+    try {
+      const result = await handleGetCommentsByRecipeId(recipeId);
+      if (result.success) {
+        setComments(result.comments);
+        console.log(result.comments);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error.message);
+    }
+  };
+
+
+  const fetchUserInfo = async () => {
+    try {
+      const accessToken = checkAuth();
+
+      const userInfo = await axios.get(
+        `http://127.0.0.1:8000/users/profile`,
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      );
+      setUser(userInfo.data.user);
+      console.log(userInfo.data.user);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchRelatedRecipes = async () => {
     try {
@@ -59,7 +101,9 @@ export const RecipeDetail = () => {
     return <></>;
   }
   React.useEffect(() => {
+    fetchUserInfo();
     fetchRecipes();
+    fetchComments();
   }, [recipeId]);
 
   const handleUpdateFavoriteRecipes = async () => {
@@ -176,37 +220,10 @@ export const RecipeDetail = () => {
                 </ol>
               </div>
             </div>
-
-            <div className="w-3/4 pr-3 bg-white rounded-md ml-20 py-2 mt-4 shadow-lg">
-              <div className="flex items-center mb-3">
-                <img src={chatIcon} alt="comment" className="h-6 w-6 ml-6" />
-                <h2 className="ml-4 text-2xl font-bold">Comment</h2>
-              </div>
-              <div className="ml-8 flex-col items-center">
-                <Comment recipeId={recipeId} />
-              </div>
-
-              <div className="ml-3 flex bg-white p-2 mt-2 mb-1 border border-gray-700 rounded-full">
-                <input
-                  type="text"
-                  // value={inputMessage}
-                  // onChange={(e) => setInputMessage(e.target.value)}
-                  // onKeyDown={handleKeyDown}
-                  placeholder="Type your comments here..."
-                  className="flex-1 outline-none border-none ml-2"
-                />
-                <button
-                  // onClick={handleSendMessage}
-                  className="text-black rounded-md mr-2"
-                >
-                  <img src={SendIcon} alt="send" className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
           </div>
 
           <div className="w-1/4 ml-20 flex flex-col justify-start">
-            <div className="w-72 grid grid-cols-1/4  bg-white border shadow-black rounded-md p-3 space-y-2 shadow-lg">
+            <div className="w-full grid grid-cols-1/4  bg-white border shadow-black rounded-md p-3 space-y-2 shadow-lg">
               <button
                 className="text-gray-900 p-1 rounded-md border border-black flex items-center justify-center space-x-2"
                 onClick={() => {
@@ -223,6 +240,18 @@ export const RecipeDetail = () => {
                 <img src={Share} alt="Share Icon" className="h-4 w-4" />
                 <span>Share</span>
               </button>
+            </div>
+
+            <div className="w-full bg-white rounded-md py-2 mt-4 shadow-lg">
+              <div className="flex items-center mb-3">
+                <img src={chatIcon} alt="comment" className="h-6 w-6 ml-6" />
+                <h2 className="ml-4 text-2xl font-bold">Comment</h2>
+              </div>
+              <div className="ml-8 flex-col items-center">
+                <Comment comments={comments} />
+              </div>
+
+              <CommentInput recipeId={recipeId} userId={user?._id} onCommentSubmit={fetchComments} />
             </div>
           </div>
         </div>
