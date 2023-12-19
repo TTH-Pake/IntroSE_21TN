@@ -15,7 +15,7 @@ const Menu = ({ showMenu, setShowMenu, onClick }) => {
         src={menuIcon}
         alt="Menu"
         onClick={onClick}
-        className="w-6 h-6 cursor-pointer transition duration-300 ease-in-out bg-white"
+        className="w-7 h-7 cursor-pointer transition duration-300 ease-in-out bg-white"
       />
 
       {showMenu && (
