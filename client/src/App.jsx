@@ -13,6 +13,7 @@ import RecipeDetail from "./components/views/RecipeDetail";
 import Search from "./components/views/search";
 import Admin from "./components/views/Admin";
 import RecipeManager from "./components/views/RecipeManager";
+import Feedback from "./components/views/Feedback";
 import { useEffect, useState } from "react";
 import { handleGetUser } from "./action/accountAction";
 import { UserContext } from "./context/userContext";
@@ -45,20 +46,27 @@ function App() {
       <BrowserRouter>
         <HandleLoginStatus>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/home/:username" element={<Profile />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/about-us" element={<About_us />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/resetPassword" element={<ResetPassword />} />
-            <Route path="/users/profile" element={<Profile />} />
-            <Route path="/others" element={<Others />} />
-            <Route path="/recipes/:recipeId" element={<RecipeDetail />} />
-            <Route path="/recipes/" element={<RecipeDetail />} />
-            <Route path="/details" element={<RecipeDetail />} />
-            <Route path="/search" element={<Search />} />
+            <Route path="/">
+              <Route index element={<Home />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="create-recipe" element={<CreateRecipe />} />
+              <Route path="home/:username" element={<Profile />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+              <Route path="about-us" element={<AboutUs />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="reset-password" element={<ResetPassword />} />
+              <Route path="users/profile" element={<Profile />} />
+              <Route path="users/admin" element={<Admin />} />
+              <Route path="users/recipeManager" element={<RecipeManager />} />
+              <Route path="others" element={<Others />} />
+              <Route path="recipes/:recipeId" element={<RecipeDetail />} />
+              <Route path="search" element={<Search />} />
+              <Route path="/recipes/" element={<RecipeDetail />} />
+              <Route path="/details" element={<RecipeDetail />} />
+              <Route path="/feedback" element={<Feedback />} />
+            </Route>
           </Routes>
         </HandleLoginStatus>
       </BrowserRouter>

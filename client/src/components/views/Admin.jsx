@@ -2,117 +2,119 @@ import { useState, useEffect } from "react";
 import NavBar from "../modules/Navbar.jsx";
 import Footer from "../modules/Footer";
 import { handleGetAllUsers } from "../../action/userAction";
-import axios from 'axios';
+import axios from "axios";
 import { message } from "antd";
 import banIcon from "/src/assets/ban.png";
-import { notify_success,notify_fail,Toast_Container } from "../../toast";
+import { notify_success, notify_fail, Toast_Container } from "../../toast";
 
 const Admin = () => {
-    const [users, setUsers] = useState([]);
-    const [newPassword, setNewPassword] = useState("");
-    const [showChangePassword, setShowChangePassword] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [newPassword, setNewPassword] = useState("");
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await handleGetAllUsers();
-                if (response.success) {
-                    setUsers(response.users);
-                } else {
-                    const errorMessage = response && response.data ? response.data.message : "Response is undefined";
-                    console.error("Error fetching users:", errorMessage);
-                }
-            } catch (error) {
-                console.error("Error fetching users:", error.message);
-            }
-        };
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await handleGetAllUsers();
+        if (response.success) {
+          setUsers(response.users);
+        } else {
+          const errorMessage =
+            response && response.data
+              ? response.data.message
+              : "Response is undefined";
+          console.error("Error fetching users:", errorMessage);
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error.message);
+      }
+    };
 
         fetchUsers();
     }, [users]);
 
+  const handleShowChangePassword = (userId) => {
+    setShowChangePassword(true);
+    setSelectedUserId(userId);
+  };
 
+  const handleChangePasswordClick = async () => {
+    try {
+      // Get the authentication token from localStorage or wherever you store it
+      const token = localStorage.getItem("accessToken");
 
-    const handleShowChangePassword = (userId) => {
-        setShowChangePassword(true);
-        setSelectedUserId(userId);
-    };  
-
-    const handleChangePasswordClick = async () => {
-        try {
-            // Get the authentication token from localStorage or wherever you store it
-            const token = localStorage.getItem('accessToken');
-
-            if (!newPassword) {
-                message.error("Password is invalid.");
-                return;
-            }
-            // Gửi yêu cầu đổi mật khẩu trực tiếp
-            const response = await axios.post(
-                'http://127.0.0.1:8000/users/admin/changepassword',
-                {
-                    userId: selectedUserId,
-                    newPassword: newPassword,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            // Kiểm tra phản hồi từ server và xử lý nếu cần
-            if (response.data.success) {
-
-                const updatedUsers = users.map((user) =>
-                    user.user_id === selectedUserId ? { ...user, account: { ...user.account, password: newPassword } } : user
-                );
-
-                // Cập nhật state
-                setUsers(updatedUsers);
-                // Đặt lại trạng thái để ẩn input và reset dữ liệu
-                setShowChangePassword(false);
-                setSelectedUserId(null);
-                setNewPassword('');
-
-                notify_success("Password changed successfully!");
-            } else {
-                console.error('Error changing password:', response.data.message);
-            }
-        } catch (error) {
-            console.error('Error changing password:', error.message);
+      if (!newPassword) {
+        message.error("Password is invalid.");
+        return;
+      }
+      // Gửi yêu cầu đổi mật khẩu trực tiếp
+      const response = await axios.post(
+        "http://127.0.0.1:8000/users/admin/changepassword",
+        {
+          userId: selectedUserId,
+          newPassword: newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-    };
+      );
 
-    const handleBanClick = async (userId) => {
-        try {
-            // Get the authentication token from localStorage or wherever you store it
-            const token = localStorage.getItem('accessToken');
+      // Kiểm tra phản hồi từ server và xử lý nếu cần
+      if (response.data.success) {
+        const updatedUsers = users.map((user) =>
+          user.user_id === selectedUserId
+            ? { ...user, account: { ...user.account, password: newPassword } }
+            : user
+        );
 
-            // Gọi API để cập nhật trạng thái "ban" của người dùng
-            const response = await axios.post(
-                'http://127.0.0.1:8000/users/admin/deleteUser',
-                {
-                    userId: userId,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+        // Cập nhật state
+        setUsers(updatedUsers);
+        // Đặt lại trạng thái để ẩn input và reset dữ liệu
+        setShowChangePassword(false);
+        setSelectedUserId(null);
+        setNewPassword("");
 
-            // Xử lý phản hồi từ server
-            if (response.data.success) {
-                notify_success("User deleted successfully!");
-                // Cập nhật trạng thái của người dùng trong state hoặc component
-            } else {
-                console.error('Error deleting user:', response.data.message);
-            }
-        } catch (error) {
-            console.error('Error deleting user:', error.message);
+        notify_success("Password changed successfully!");
+      } else {
+        console.error("Error changing password:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error changing password:", error.message);
+    }
+  };
+
+  const handleBanClick = async (userId) => {
+    try {
+      // Get the authentication token from localStorage or wherever you store it
+      const token = localStorage.getItem("accessToken");
+
+      // Gọi API để cập nhật trạng thái "ban" của người dùng
+      const response = await axios.post(
+        "http://127.0.0.1:8000/users/admin/deleteUser",
+        {
+          userId: userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-    };
+      );
+
+      // Xử lý phản hồi từ server
+      if (response.data.success) {
+        notify_success("User deleted successfully!");
+        // Cập nhật trạng thái của người dùng trong state hoặc component
+      } else {
+        console.error("Error deleting user:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error.message);
+    }
+  };
 
     return (
         <div>
@@ -133,13 +135,13 @@ const Admin = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users && users.map((user) => (
+                            {users.map((user) => (
                                 <tr key={user.user_id}>
-                                    <td className="border px-4 py-2">{user?.user_id}</td>
-                                    <td className="border px-4 py-2">{user?.account?.email}</td>
-                                    <td className="border px-4 py-2">{user?.name}</td>
-                                    <td className="border px-4 py-2">{user?.is_admin ? 'ADMIN' : 'USER'}</td>
-                                    <td className="border px-4 py-2">{user?.account?.password}</td>
+                                    <td className="border px-4 py-2">{user.user_id}</td>
+                                    <td className="border px-4 py-2">{user.account.email}</td>
+                                    <td className="border px-4 py-2">{user.name}</td>
+                                    <td className="border px-4 py-2">{user.is_admin ? 'ADMIN' : 'USER'}</td>
+                                    <td className="border px-4 py-2">{user.account.password}</td>
                                     <td className="border px-4 py-2">
                                         {showChangePassword && selectedUserId === user.user_id ? (
                                             <div className="flex justify-center items-center">
