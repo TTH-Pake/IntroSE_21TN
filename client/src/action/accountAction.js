@@ -5,6 +5,8 @@ import {
   googleprovider,
 } from "../components/Firebase/firebase.initialize";
 import { signInWithPopup, signOut } from "firebase/auth";
+import { Cookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 //Login
 export const handleLogin = async (userData) => {
@@ -68,7 +70,7 @@ export const handleResetPassword = async (userData) => {
 export const handleLoginWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleprovider);
-    console.log(result);
+
     const { displayName, email, metadata, photoURL } = result.user;
     const loggedInUser = {
       name: displayName,
@@ -77,7 +79,6 @@ export const handleLoginWithGoogle = async () => {
       lastLoginTime: metadata.lastSignInTime,
     };
     localStorage.setItem("google-user", JSON.stringify(loggedInUser));
-    console.log("user: ", loggedInUser);
 
     return true;
   } catch (error) {
@@ -99,7 +100,6 @@ export const handleLoginWithGoogle = async () => {
 export const handleGetUser = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken");
-    // const accessToken = getCookie('accessToken');
 
     const result = await axios.get("http://127.0.0.1:8000/users/profile", {
       headers: {
@@ -133,3 +133,8 @@ export const handleLogout = () => {
     localStorage.removeItem("google-user");
   }
 };
+
+export function checkAuth() {
+  const accessToken = localStorage.getItem("accessToken");
+  return accessToken;
+}

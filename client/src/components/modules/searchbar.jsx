@@ -17,7 +17,7 @@ const SearchBar = () => {
           className="search-input w-full px-4 py-2 border bg-green-500 outline-none placeholder-gray-700 pl-10"
           style={{ borderRadius: "12px" }}
           type="text"
-          placeholder="Tìm kiếm công thức..."
+          placeholder="Search for recipes..."
           value={keywords}
           onChange={(e) => setKeywords(e.target.value)}
         />

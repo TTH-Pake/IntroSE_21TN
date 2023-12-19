@@ -9,7 +9,7 @@ On first terminal
 - cd client
 - npm install
 - npm run dev
-- localhost:5173
+- localhost:3000
 
 ## Server
 

@@ -1,61 +1,17 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import starIcon from "/src/assets/star.png";
-import PropTypes from "prop-types";
+import filterIcon from "/src/assets/filter.png";
+import commentIcon from "/src/assets/chat.png";
+import likeIcon from "/src/assets/heart.png";
 import { handleRankingRecipes } from "../../action/recipesAction";
 
 let recipes_db = [];
 
-const RecipeRankItem = ({ recipe }) => {
-  return (
-    <Link
-      to={`/recipes/?ID=${recipe.recipe_id}`}
-      key={recipe.recipe_id}
-      className="recipe-rank-item bg-white rounded-lg shadow overflow-hidden transform transition duration-500 hover:scale-105"
-    >
-      <img
-        src={recipe.img_src}
-        alt={recipe.recipe_name}
-        className="w-full h-52 object-cover round-lg"
-      />
-      <div className="p-4 flex flex-col justify-between h-48">
-        <div>
-          <h3 className="font-bold text-lg">{recipe.recipe_name}</h3>
-          <p className="text-gray-700">{recipe.cook_time}</p>
-          {/* Placeholder for icons and other details */}
-        </div>
-        <div className="flex items-end">
-          <div>{/* Placeholder for icons and other details */}</div>
-          <div className="flex items-center ml-auto">
-            <img src={starIcon} alt="Star" className="h-5 w-5 mr-2" />
-            <span className="font-bold">{recipe.rating}</span>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-};
-
-RecipeRankItem.propTypes = {
-  recipe: PropTypes.shape({
-    img_src: PropTypes.string.isRequired,
-    recipe_name: PropTypes.string.isRequired,
-    cook_time: PropTypes.string.isRequired,
-    rating: PropTypes.shape({
-      $numberDouble: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-        .isRequired,
-    }).isRequired,
-  }).isRequired,
-};
-
-let recipes_start = [];
-let recipes_time = [];
 // eslint-disable-next-line react/prop-types
 const RecipeRanking = ({ recipes: initialRecipes = recipes_db }) => {
   const [recipes, setRecipes] = useState(initialRecipes);
-  const [sortOrder, setSortOrder] = useState("desc");
+  const [sortOrder] = useState("desc");
   const [sortBy, setSortBy] = useState("rating");
 
   const convertCookTimeToMinutes = (cookTime) => {
@@ -88,55 +44,91 @@ const RecipeRanking = ({ recipes: initialRecipes = recipes_db }) => {
     const fetchRankingRecipes = async () => {
       recipes_db = await handleRankingRecipes();
 
-      let list_recipes = recipes_db.slice(0, 10);
-      setRecipes(list_recipes);
+      if (recipes_db) {
+        let list_recipes = recipes_db.slice(0, 10);
+        setRecipes(list_recipes);
+      }
     };
     fetchRankingRecipes();
-    console.log(sortBy);
-    console.log(sortOrder);
   }, [sortOrder]);
 
   return (
     <div className="recipe-ranking-container container border-t mx-auto px-4 py-7">
       <div className="flex justify-between items-center mb-4 space-x-4">
-        <h2 className="text-2xl font-bold mb-6">Recipes Ranking</h2>
-        <div className="flex justify-end mb-4 space-x-4">
-          <button
-            className={`bg-blue-500 text-white px-4 py-2 rounded-md ${
-              sortBy === "rating" ? "opacity-75" : ""
-            }`}
-            onClick={handleSortByRating}
-          >
-            Sort by Rating
-          </button>
-          <button
-            className={`bg-blue-500 text-white px-4 py-2 rounded-md ${
-              sortBy === "cookTime" ? "opacity-75" : ""
-            }`}
-            onClick={handleSortByCookTime}
-          >
-            Sort by Cook Time
-          </button>
+        <h2 className="text-2xl font-bold mb-2">Top Recipes</h2>
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center space-x-3">
+            <img src={filterIcon} alt="filter" className="h-8 w-8 mr-2" />
+            <button
+              className={`bg-green-500 text-white px-4 py-2 rounded-md ${
+                sortBy === "rating" ? "opacity-75" : ""
+              }`}
+              onClick={handleSortByRating}
+            >
+              Rating
+            </button>
+            <button
+              className={`bg-green-500 text-white px-4 py-2 rounded-md ${
+                sortBy === "cookTime" ? "opacity-75" : ""
+              }`}
+              onClick={handleSortByCookTime}
+            >
+              Time
+            </button>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4">
-        {recipes.map((recipe, index) => (
-          <Link to={`/recipes/?ID=${recipe.recipe_id}`} key={recipe.recipe_id}>
-            <RecipeRankItem key={index} recipe={recipe} />
+        {recipes && recipes.map((recipe, index) => (
+          <Link to={`/recipes/?ID=${recipe?.recipe_id}`} key={recipe.recipe_id}>
+            <div
+              key={index}
+              className="bg-white rounded-lg shadow overflow-hidden transform transition duration-500 hover:scale-105 h-full"
+            >
+              <img
+                src={recipe?.img_src}
+                alt={recipe?.recipe_name}
+                className="w-full h-44 object-cover rounded-t-lg"
+              />
+              <div className="p-4 flex flex-col h-full">
+                <h3 className="font-bold text-lg overflow-hidden overflow-ellipsis whitespace-nowrap">
+                  {recipe?.recipe_name}
+                </h3>
+                <p className="text-gray-700 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                  {recipe?.cook_time}
+                </p>
+                <div className="flex flex-row items-center justify-between mt-2">
+                  <div className="flex items-center">
+                    {/* Like Icon */}
+                    <div className="flex items-center mr-2">
+                      <img src={likeIcon} alt="like" className="h-5 w-5" />
+                    </div>
+
+                    {/* Comment Icon */}
+                    <div className="flex items-center">
+                      <img
+                        src={commentIcon}
+                        alt="comment"
+                        className="h-5 w-5 mr-2"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center">
+                    {/* Star (Rating) Icon */}
+                    <div className="flex items-center">
+                      <img src={starIcon} alt="Star" className="h-5 w-5 mr-2" />
+                      <span className="font-bold">{recipe?.rating}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Link>
         ))}
       </div>
     </div>
   );
-};
-
-RecipeRankItem.propTypes = {
-  recipe: PropTypes.shape({
-    img_src: PropTypes.string.isRequired,
-    recipe_name: PropTypes.string.isRequired,
-    cook_time: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired, // Change this line
-  }).isRequired,
 };
 
 export default RecipeRanking;

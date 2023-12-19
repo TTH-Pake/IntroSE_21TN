@@ -28,7 +28,7 @@ const NavBar = () => {
 
       <SearchBar className="flex-grow mx-2" />
 
-      <div className="flex-shrink-0 flex items-center space-x-10 bg-white">
+      <div className="flex-shrink-0 flex items-center space-x-6 bg-white">
         <Avatar
           showLoginForm={showLoginForm}
           setShowLoginForm={setShowLoginForm}

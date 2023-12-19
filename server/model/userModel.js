@@ -20,7 +20,7 @@ const schema = new Schema({
     default: "other",
   },
 
-  isadmin: {
+  is_admin: {
     type: Boolean,
     enum: [true, false],
     default: false,
@@ -33,21 +33,26 @@ const schema = new Schema({
   },
 
   user_recipes: {
-    type: Array,
+    type: [Number],
+    default: [],
   },
 
   favourites: {
-    type: Array,
+    type: [Number],
+    default: [],
   },
 
   followers: {
-    type: Array,
+    type: [Number],
+    default: [],
   },
 
   account: {
     type: Schema.Types.ObjectId,
     ref: "accounts",
+    required: false,
   },
+  phone: { type: String },
 });
 
 module.exports = mongoose.model("users", schema);
