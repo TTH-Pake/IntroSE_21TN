@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { handleRegister } from "../../action/accountAction";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo-recipe.png";
 import { message } from "antd";
+import { useCookies } from "react-cookie";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const navigate = useNavigate();
 
+  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  if (cookies.accessToken) {
+    navigate(location.state?.from || "/home");
+  }
   const onSubmit = (e) => {
     e.preventDefault();
     const userData = {

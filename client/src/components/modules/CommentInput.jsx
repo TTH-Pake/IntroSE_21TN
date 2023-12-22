@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { SendIcon } from "../../assets"
+import { SendIcon } from "../../assets";
 
 const CommentInput = ({ recipeId, userId, onCommentSubmit }) => {
   const [comment, setComment] = useState("");
@@ -34,7 +34,11 @@ const CommentInput = ({ recipeId, userId, onCommentSubmit }) => {
           placeholder="Type your comments here..."
           className="flex-1 outline-none border-none ml-2"
         />
-        <button type="button" onClick={handleSendComment} className="text-black rounded-md mr-2">
+        <button
+          type="button"
+          onClick={handleSendComment}
+          className="text-black rounded-md mr-2"
+        >
           <img src={SendIcon} alt="send" className="h-4 w-4" />
         </button>
       </div>

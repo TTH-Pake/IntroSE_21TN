@@ -6,11 +6,10 @@ import Chat from "./Chat";
 import RecommendedRecipes from "../modules/RecommendedRecipes";
 import RecipeRanking from "../modules/RecipeRanking";
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../context/userContext";
 import { Link } from "react-router-dom";
-
+import { useCookies } from "react-cookie";
 const Home = () => {
-  const user = useContext(UserContext);
+  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
 
   const ButtonGroup = () => {
     return (
@@ -30,17 +29,18 @@ const Home = () => {
           Organize meals
         </button>
         <button
-          onClick={() => { }}
+          onClick={() => {}}
           className="btn w-1/4 bg-green-500 hover:bg-green-300 px-4 py-2.5 rounded-full font-medium"
         >
           Tip and tricks
         </button>
 
-
-        <Link to="/blog" className="btn w-1/4 bg-green-500 hover:bg-green-300 px-4 py-2.5 rounded-full font-medium">
+        <Link
+          to="/blog"
+          className="btn w-1/4 bg-green-500 hover:bg-green-300 px-4 py-2.5 rounded-full font-medium"
+        >
           Blog
         </Link>
-
       </div>
     );
   };

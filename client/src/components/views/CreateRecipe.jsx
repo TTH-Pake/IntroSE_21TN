@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
 import NavBar from "../modules/Navbar";
 import Footer from "../modules/Footer";
-import { UserContext } from "../../context/userContext";
 import { handleCreateRecipe } from "../../action/recipesAction";
 import cookingICon from "../../assets/cooking.png";
 import cookingBookICon from "../../assets/cook-book.png";
@@ -10,6 +10,8 @@ import deleteICon from "../../assets/trash_can.svg";
 import { checkAuth } from "../../action/accountAction";
 import { notify_fail, notify_success, Toast_Container } from "../../toast";
 import { message } from "antd";
+import { useCookies } from "react-cookie";
+import { handleGetCurrentUser } from "../../action/userAction";
 
 const Ingredient = ({
   index,
@@ -70,7 +72,6 @@ const IngredientsList = ({
 
   const handleAdd = () => {
     setIsAddingIngredient(false);
-
   };
 
   const handleCancel = () => {
@@ -316,7 +317,9 @@ const SubmitForm = ({ onSubmit, user }) => {
   return (
     <div className="flex flex-row justify-around">
       <button
-        onClick={()=> {onSubmit(user.user_id)}}
+        onClick={() => {
+          onSubmit(user.user_id);
+        }}
         className="text-2xl bg-red-300 px-4 py-2 mt-4 rounded-full font-bold"
       >
         Submit
@@ -325,7 +328,7 @@ const SubmitForm = ({ onSubmit, user }) => {
   );
 };
 
-const CreateRecipeForm = ({user}) => {
+const CreateRecipeForm = ({ user, accessToken }) => {
   const [recipeName, setRecipeName] = useState("");
   const [prepTime, setPrepTime] = useState("");
   const [cookTime, setCookTime] = useState("");
@@ -333,8 +336,8 @@ const CreateRecipeForm = ({user}) => {
   const [ingredientsList, setIngredientsList] = useState([]); // ["100g flour", "100ml water" ...
   const [steps, setSteps] = useState([]);
   const [nutritions, setNutritions] = useState([]); // ["Fat 10g  20%", "Protein 20g  40%", ...
+  const navigate = useNavigate();
 
-  
   const onSubmit = async (user_id) => {
     const recipe = {
       recipe_name: recipeName,
@@ -344,22 +347,24 @@ const CreateRecipeForm = ({user}) => {
       steps: steps,
       nutritions: [],
       author: user_id,
-      img_src:"https://i.pinimg.com/originals/c8/77/c1/c877c1ed6abae4438c1b41cb1a91aa9b.jpg",
+      img_src:
+        "https://i.pinimg.com/originals/c8/77/c1/c877c1ed6abae4438c1b41cb1a91aa9b.jpg",
     };
-    
+
     if (recipeName === "" || prepTime === "" || cookTime === "") {
-      notify_fail("Please fill in all fields");
+      notify_fail("Please fill in all fields!");
       return;
     }
-    if (await handleCreateRecipe(recipe)) {
-      notify_success("Create recipe successfully");
+    const recipe_id = await handleCreateRecipe(recipe, accessToken);
+    if (recipe_id) {
+      notify_success("Create recipe successfully!");
+      navigate(`/recipes/?ID=${recipe_id}`);
     }
-
   };
 
   return (
     <div className="flex flex-col items-center bg-white justify-center">
-      <h1 className="text-3xl font-bold text-center mt-4">ĐĂNG CÔNG THỨC</h1>
+      <h1 className="text-3xl font-bold text-center mt-4">Post Recipe</h1>
       <GeneralInfo
         recipeName={recipeName}
         setRecipeName={setRecipeName}
@@ -378,21 +383,28 @@ const CreateRecipeForm = ({user}) => {
 };
 
 export default function CreateRecipe() {
-  const user = useContext(UserContext);
+  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (!checkAuth()) {
+    const getUser = async () => {
+      const user = await handleGetCurrentUser(cookies.accessToken);
+      setUser(user);
+    };
+    if (!checkAuth(cookies.accessToken)) {
       navigate("/login", { state: { from: location } }); // Chuyển hướng người dùng đến trang đăng nhập
       message.error("Please login to create recipe!");
+    } else {
+      getUser();
     }
-  }, [user]);
+  }, [cookies.accessToken]);
 
   return (
     <div className="home-wrapper h-screen overflow-y-auto bg-white">
       <NavBar />
-      <CreateRecipeForm user = {user}/>
+      <CreateRecipeForm user={user} accessToken={cookies.accessToken} />
       <Footer />
     </div>
   );

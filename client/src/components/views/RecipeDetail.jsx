@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import StarRatings from "react-star-ratings";
 
 import { handleSearchRecipesID } from "../../action/recipesAction";
@@ -15,16 +16,14 @@ import { message } from "antd";
 import axios from "axios";
 import { handleGetRelatedRecipes } from "../../action/recipesAction";
 import { handleGetCommentsByRecipeId } from "../../action/recipesAction";
-import CommentInput from "../modules/CommentInput.jsx"
-
+import CommentInput from "../modules/CommentInput.jsx";
 
 import { Bookmark, Clock, SendIcon, Share, chatIcon } from "../../assets";
 import "./Profile.css";
 
 import { checkAuth } from "../../action/accountAction";
 import { Toast_Container, notify_success } from "../../toast";
-
-
+import { handleGetCurrentUser } from "../../action/userAction.js";
 
 export const RecipeDetail = () => {
   const navigate = useNavigate();
@@ -36,7 +35,7 @@ export const RecipeDetail = () => {
   const [loading, setLoading] = React.useState(true);
   const [user, setUser] = React.useState(null);
   const [comments, setComments] = React.useState([]);
-
+  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
 
   const fetchComments = async () => {
     try {
@@ -51,20 +50,10 @@ export const RecipeDetail = () => {
     }
   };
 
-
   const fetchUserInfo = async () => {
     try {
-      const accessToken = checkAuth();
-
-      const userInfo = await axios.get(
-        `http://127.0.0.1:8000/users/profile`,
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
-        }
-      );
-      setUser(userInfo.data.user);
+      const user = await handleGetCurrentUser(cookies.accessToken);
+      setUser(user);
     } catch (err) {
       console.log(err);
     }
@@ -189,11 +178,12 @@ export const RecipeDetail = () => {
               </div>
 
               <ul className="ml-8 mt-3 list-inside">
-                {recipe?.ingredients_list && recipe.ingredients_list.map((ingredient, index) => (
-                  <li key={index} className="mb-2 pb-2">
-                    {ingredient.trim()}
-                  </li>
-                ))}
+                {recipe?.ingredients_list &&
+                  recipe.ingredients_list.map((ingredient, index) => (
+                    <li key={index} className="mb-2 pb-2">
+                      {ingredient.trim()}
+                    </li>
+                  ))}
               </ul>
             </div>
 
@@ -210,12 +200,13 @@ export const RecipeDetail = () => {
 
               <div className="ml-8 mb-2 mt-3">
                 <ol className="prose prose-blue list-inside">
-                  {recipe?.directions && recipe?.directions.split("\n").map((step, index) => (
-                    <li key={index} className="mb-2 pb-2">
-                      <span className="font-bold">Step {index + 1}:</span>{" "}
-                      {step}
-                    </li>
-                  ))}
+                  {recipe?.directions &&
+                    recipe?.directions.split("\n").map((step, index) => (
+                      <li key={index} className="mb-2 pb-2">
+                        <span className="font-bold">Step {index + 1}:</span>{" "}
+                        {step}
+                      </li>
+                    ))}
                 </ol>
               </div>
             </div>
@@ -250,7 +241,11 @@ export const RecipeDetail = () => {
                 <Comment comments={comments} />
               </div>
 
-              <CommentInput recipeId={recipeId} userId={user?.user_id} onCommentSubmit={fetchComments} />
+              <CommentInput
+                recipeId={recipeId}
+                userId={user?.user_id}
+                onCommentSubmit={fetchComments}
+              />
             </div>
           </div>
         </div>

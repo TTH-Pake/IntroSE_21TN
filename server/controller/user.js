@@ -6,6 +6,7 @@ const User = require("../model/userModel");
 const Account = require("../model/accountModel");
 const Recipe = require("../model/recipeModel");
 const Comment = require("../model/commentModel");
+const Blog = require("../model/blogModel");
 
 const verifyToken = require("../middleware/account");
 const mongoose = require("mongoose");
@@ -52,7 +53,6 @@ const getAccountControl = async (req, res) => {
   }
 };
 
-
 // @route POST API/POST
 // @desc Create user
 // @access private
@@ -66,7 +66,6 @@ const createUserControl = async (req, res) => {
   }
 
   try {
-
     const newUser = new User({
       user_id: user_id,
       name: name,
@@ -85,9 +84,7 @@ const createUserControl = async (req, res) => {
 };
 
 const getUserByUserIdControl = async (req, res) => {
-
   const userID = req.params.user_id;
-
   try {
     const user = await User.findOne({ user_id: userID });
 
@@ -101,7 +98,6 @@ const getUserByUserIdControl = async (req, res) => {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
-
 };
 
 const getProfileControl = async (req, res) => {
@@ -240,6 +236,27 @@ const getRecipeManagerControl = async (req, res) => {
   }
 };
 
+const getBlogManagerControl = async (req, res) => {
+  try {
+    const user = await User.findOne({ account: req.userid });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (user.is_admin === false) {
+      const blogs = await Blog.find({ user_id: user.user_id });
+      return res.status(200).json({ success: true, blogs });
+    }
+    else {
+      const blogs = await Blog.find({});
+      return res.status(200).json({ success: true, blogs });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 const deleteRecipeControl = async (req, res) => {
   try {
     const recipeID = req.body.recipe_id;
@@ -251,7 +268,6 @@ const deleteRecipeControl = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-
 
     if (roleUser.is_admin === false) {
       await User.findOneAndUpdate(
@@ -289,7 +305,6 @@ const deleteRecipeControl = async (req, res) => {
   }
 };
 
-
 const updateProfile = async (req, res) => {
   const userId = req.params.userId;
   const updatedProfile = req.body;
@@ -303,15 +318,10 @@ const updateProfile = async (req, res) => {
     // Trả về người dùng đã được cập nhật
     res.json({ success: true, user: updatedUser });
   } catch (error) {
-    console.error('Error updating user profile:', error.message);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    console.error("Error updating user profile:", error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
-
-
-
-
-
 
 module.exports = {
   getAllUsersControl,
@@ -324,6 +334,7 @@ module.exports = {
   deleteUser,
   changePassword,
   getRecipeManagerControl,
+  getBlogManagerControl,
   deleteRecipeControl,
   updateProfile,
 };

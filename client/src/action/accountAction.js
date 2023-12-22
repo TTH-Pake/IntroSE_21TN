@@ -6,10 +6,9 @@ import {
 } from "../components/Firebase/firebase.initialize";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { Cookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
 
 //Login
-export const handleLogin = async (userData) => {
+export const handleLogin = async (userData, setCookie) => {
   try {
     const result = await axios.post(
       "http://127.0.0.1:8000/api/login",
@@ -18,7 +17,12 @@ export const handleLogin = async (userData) => {
 
     if (result.data.success === true) {
       message.success("Login successful!");
-      localStorage.setItem("accessToken", result.data.accessToken);
+      setCookie("accessToken", result.data.accessToken, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7, // Expires after 1week
+        sameSite: true,
+      });
+
       return result.data.accessToken;
     } else {
       message.error(result.data.error);
@@ -67,18 +71,47 @@ export const handleResetPassword = async (userData) => {
 };
 
 // login with google
+export const handleLoginWithGoogle1 = async () => {
+  window.open("http://127.0.0.1:8000/auth/google", "_self");
+  const result = await axios
+    .get("http://127.0.0.1:8000/auth/login/success", {
+      withCredentials: true,
+    })
+    .then((res) => {
+      console.log("res: ", res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  console.log("result11: ", result);
+};
+
+// try {
+//   const result = await axios.get("http://127.0.0.1:8000/auth/login/success", {
+//     withCredentials: true,
+//   });
+//   console.log(result);
+// } catch (err) {
+//   console.log(err);
+// }
+// login with google
 export const handleLoginWithGoogle = async () => {
   try {
-    const result = await signInWithPopup(auth, googleprovider);
-
-    const { displayName, email, metadata, photoURL } = result.user;
+    const data = await signInWithPopup(auth, googleprovider);
+    console.log("result user: ", data.user);
+    const { displayName, email, metadata, photoURL } = data.user;
     const loggedInUser = {
       name: displayName,
       email: email,
       image: photoURL,
       lastLoginTime: metadata.lastSignInTime,
     };
-    localStorage.setItem("google-user", JSON.stringify(loggedInUser));
+
+    const result = await axios.post(
+      "http://127.0.0.1:8000/api/google/login",
+      loggedInUser
+    );
 
     return true;
   } catch (error) {
@@ -96,45 +129,12 @@ export const handleLoginWithGoogle = async () => {
   return false;
 };
 
-// Get user
-export const handleGetUser = async () => {
-  try {
-    const accessToken = localStorage.getItem("accessToken");
-
-    const result = await axios.get("http://127.0.0.1:8000/users/profile", {
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
-    });
-
-    if (result.data.success === true) {
-      return result.data.user;
-    } else {
-      message.error(result.data.error);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-  return false;
+export const handleLogout = (removeCookie) => {
+  removeCookie("accessToken", { path: "/" });
 };
 
-export const handleLogout = () => {
-  signOut(auth)
-    .then(() => {
-      // clear data from UI
-      message.success("logout successful!");
-    })
-    .catch((error) => console.log(error));
-
-  // clear data from localStorage
-  let getGoogleUser = localStorage.getItem("google-user");
-
-  if (getGoogleUser) {
-    localStorage.removeItem("google-user");
+export function checkAuth(accessToken) {
+  if (accessToken) {
+    return true;
   }
-};
-
-export function checkAuth() {
-  const accessToken = localStorage.getItem("accessToken");
-  return accessToken;
 }

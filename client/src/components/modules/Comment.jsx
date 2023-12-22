@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { message } from "antd";
 import avatarIcon from "/src/assets/avatar.png";
-import PropTypes from "prop-types";
 import { handleGetCommentsByRecipeId } from "../../action/recipesAction";
 import { handleGetUserByID } from "../../action/userAction";
 
@@ -11,7 +10,6 @@ const Comment = ({ comments }) => {
   useEffect(() => {
     const fetchComments = async () => {
       let newComments = [];
-
       for (const comment of comments) {
         try {
           const result = await handleGetUserByID(comment.user_id);
@@ -22,7 +20,6 @@ const Comment = ({ comments }) => {
           });
         } catch (error) {
           console.error("Error fetching comments:", error.message);
-          
         }
       }
 

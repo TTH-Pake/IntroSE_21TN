@@ -19,7 +19,7 @@ const schema = new Schema({
     required: true,
   },
 
-  created_time : Date,
+  created_time: Date,
 });
 
 module.exports = mongoose.model("accounts", schema);

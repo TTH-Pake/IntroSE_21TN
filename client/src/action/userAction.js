@@ -2,12 +2,31 @@ import axios from "axios";
 import { Toast_Container, notify_success } from "./../toast";
 import { message } from "antd";
 
-export const handleGetAllUsers = async () => {
+// Get user
+export const handleGetCurrentUser = async (accessToken) => {
   try {
-    const token = localStorage.getItem("accessToken");
+    const result = await axios.get("http://127.0.0.1:8000/users/profile", {
+      headers: {
+        Authorization: "Bearer " + accessToken,
+      },
+    });
+
+    if (result.data.success === true) {
+      return result.data.user;
+    } else {
+      message.error(result.data.error);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return null;
+};
+
+export const handleGetAllUsers = async (accessToken) => {
+  try {
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     };
 
@@ -25,9 +44,8 @@ export const handleGetAllUsers = async () => {
 export const handleGetUserByID = async (user_id) => {
   try {
     const user = await axios.get(
-      `http://127.0.0.1:8000/users/getUser/${user_id}`,
+      `http://127.0.0.1:8000/users/getUser/${user_id}`
     );
-
 
     if (user.data.success) {
       return user.data.user;
@@ -38,17 +56,16 @@ export const handleGetUserByID = async (user_id) => {
   }
 };
 
-export const handleGetRecipesUser = async () => {
+export const handleGetRecipesUser = async (accessToken) => {
   try {
-    const token = localStorage.getItem("accessToken");
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     };
 
     const recipes = await axios.get(
-      "http://127.0.0.1:8000/users/recipeManager",
+      "http://127.0.0.1:8000/users/recipe-manager",
       config
     );
 
@@ -61,11 +78,30 @@ export const handleGetRecipesUser = async () => {
   }
 };
 
-export const handleDeleteRecipes = async (recipe_id) => {
+export const handleGetBlogUser = async (accessToken) => {
   try {
-    // Get the authentication token from localStorage or wherever you store it
-    const token = localStorage.getItem("accessToken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
 
+    const blogs = await axios.get(
+      "http://127.0.0.1:8000/users/blogManager",
+      config
+    );
+
+    if (blogs.data.success) {
+      return blogs.data.blogs;
+    }
+  } catch (error) {
+    console.error("Error fetching all users:", error.message);
+    throw error;
+  }
+}
+
+export const handleDeleteRecipes = async (recipe_id, accessToken) => {
+  try {
     // Gọi API để cập nhật trạng thái "ban" của người dùng
     const response = await axios.post(
       "http://127.0.0.1:8000/users/deleteRecipe",
@@ -74,7 +110,7 @@ export const handleDeleteRecipes = async (recipe_id) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -92,21 +128,23 @@ export const handleDeleteRecipes = async (recipe_id) => {
   }
 };
 
-export const updateUserProfile = async (updatedProfile, userId) => {
+export const updateUserProfile = async (
+  updatedProfile,
+  userId,
+  accessToken
+) => {
   try {
-    // Get the authentication token from localStorage or wherever you store it
-    const token = localStorage.getItem("accessToken");
     // Make an API request to update the user profile with token in headers
     const response = await axios.put(
       `http://127.0.0.1:8000/users/updateProfile/${userId}`,
       updatedProfile,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
-    console.log('Updated User in action:', response);
+    console.log("Updated User in action:", response);
 
     // Assuming the API response contains the updated user profile
     const updatedUserProfile = response.data;
@@ -117,4 +155,3 @@ export const updateUserProfile = async (updatedProfile, userId) => {
     throw error;
   }
 };
-
