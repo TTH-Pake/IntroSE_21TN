@@ -53,9 +53,29 @@ const deleteBlogControl = async (req, res) => {
     }
 };
 
+const createBlogControl = async (req, res) => {
+    try {
+        const { user_id, content } = req.body;
+
+        const maxIdBlog = await Blogs.findOne({}, { id: 1 }, { sort: { id: -1 } });
+
+        const newBlog = await Blogs.create({
+            user_id,
+            content,
+            created_time: new Date(),
+            id: maxIdBlog ? maxIdBlog.id + 1 : 1,
+        });
+
+        res.status(201).json(newBlog);
+    } catch (error) {
+        console.error('Error creating blog:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 module.exports = {
     getAllBlogs,
     editBlogControl,
     deleteBlogControl,
+    createBlogControl,
 };

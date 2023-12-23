@@ -11,4 +11,7 @@ router.put("/editBlog/:blogId", blogController.editBlogControl);
 // Delete a blog
 router.delete("/deleteBlog/:blogId", blogController.deleteBlogControl);
 
+// Create a blog
+router.post("/createBlog", blogController.createBlogControl);
+
 module.exports = router;
