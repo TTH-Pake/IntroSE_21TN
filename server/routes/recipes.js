@@ -15,5 +15,4 @@ router.get("/recipes/:id/comment", recipesController.getCommentsByRecipeId);
 router.get("/recipes/:id/related", recipesController.getRelatedRecipes);
 
 router.post("/recipe/create", verifyToken, recipesController.postRecipeControl);
-
 module.exports = router;

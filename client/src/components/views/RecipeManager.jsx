@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../modules/Navbar";
 import Footer from "../modules/Footer";
 import deleteIcon from "../../assets/trash_can.svg";
@@ -11,7 +12,13 @@ import {
   handleGetRecipesUser,
   handleDeleteRecipes,
 } from "../../action/userAction";
+
 const Recipe = (recipe) => {
+  const navigate = useNavigate();
+  const navigationEditRecipes = () => {
+    navigate(`/edit-recipe/${recipe.recipe_id}`);
+  };
+
   const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
@@ -46,7 +53,12 @@ const Recipe = (recipe) => {
         </div>
 
         <div className="col-span-1 flex items-center justify-center ml-10 space-x-5">
-          <img className="h-10 w-10" src={EditIcon} alt="" />
+          <button
+            className="bg-white-300 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded"
+            onClick={() => navigationEditRecipes()}
+          >
+            <img className="h-5 w-10" src={EditIcon} alt="" />
+          </button>
 
           <button
             className="bg-white-300 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded"

@@ -155,3 +155,28 @@ export const updateUserProfile = async (
     throw error;
   }
 };
+
+export const handleUpdateRecipe = async (recipe_id, updatedRecipe, token) => {
+  try {
+
+    const response = await axios.put(
+      `http://127.0.0.1:8000/users/edit-recipe/${recipe_id}`,
+      updatedRecipe,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+
+    const updatedRecipeProfile = response.data;
+    if(updatedRecipeProfile.success) {
+    return updatedRecipeProfile;
+    }
+
+  } catch (error) {
+    console.error("Error updating recipe.", error.message);
+    throw error;
+  }
+}
+

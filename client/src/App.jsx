@@ -20,31 +20,7 @@ import CreateRecipe from "./components/views/CreateRecipe";
 import { CookiesProvider, useCookies } from "react-cookie";
 import NoPage from "./components/views/NoPage";
 import BlogManager from "./components/views/BlogManager";
-
-
-// const HandleLoginStatus = ({ children, cookies }) => {
-//   const [user, setUser] = useState(null);
-//   const [accessToken, setAccessToken] = useState(null);
-//   const location = useLocation();
-
-//   useEffect(() => {
-//     const fetchAccount = async () => {
-//       const accessToken = cookies.accessToken;
-//       console.log("accessToken", accessToken);
-//       if (!accessToken) {
-//         return;
-//       }
-//       setAccessToken(accessToken);
-//     };
-//     fetchAccount();
-//   }, [location]); // Add location to the dependency array
-
-//   return (
-//     <AccessTokenContext.Provider value={accessToken}>
-//       {children}
-//     </AccessTokenContext.Provider>
-//   );
-// };
+import UpdateRecipe from "./components/views/EditRecipe";
 
 function App() {
   const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
@@ -60,6 +36,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="create-recipe" element={<CreateRecipe />} />
+              <Route path="/edit-recipe/:recipeid" element={<UpdateRecipe/>} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
               <Route path="about-us" element={<AboutUs />} />

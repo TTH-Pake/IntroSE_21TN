@@ -78,28 +78,18 @@ export const handleLoginWithGoogle1 = async () => {
       withCredentials: true,
     })
     .then((res) => {
-      console.log("res: ", res);
+      console.log(res);
+      return true;
     })
     .catch((err) => {
       console.log(err);
     });
 
-  console.log("result11: ", result);
 };
 
-// try {
-//   const result = await axios.get("http://127.0.0.1:8000/auth/login/success", {
-//     withCredentials: true,
-//   });
-//   console.log(result);
-// } catch (err) {
-//   console.log(err);
-// }
-// login with google
 export const handleLoginWithGoogle = async () => {
   try {
     const data = await signInWithPopup(auth, googleprovider);
-    console.log("result user: ", data.user);
     const { displayName, email, metadata, photoURL } = data.user;
     const loggedInUser = {
       name: displayName,
