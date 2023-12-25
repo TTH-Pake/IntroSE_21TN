@@ -64,11 +64,9 @@ const BlogPostCard = ({ post, currentUser, onDelete, onEdit }) => {
 
     const handleDeletePost = async () => {
         try {
-            console.log("Deleting post:", post);
             const isDeleted = await handleDeleteBlog(post.id);
             if (isDeleted) {
                 onDelete(post.id);
-                console.log("Post deleted successfully");
             }
             setDropdownOpen(false);
         } catch (error) {
