@@ -1,9 +1,9 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyCyo7MrenJmgEGi2Ed72AG8jwpGrQYWgF4",
-  authDomain: "love-cook-e14b7.firebaseapp.com",
-  projectId: "love-cook-e14b7",
-  storageBucket: "love-cook-e14b7.appspot.com",
-  messagingSenderId: "846114637856",
-  appId: "1:846114637856:web:31e9eeed6b04c170795445",
-  measurementId: "G-8VDVRDC5VC",
+  apiKey: "AIzaSyBfjgXzZWwpYLx4SP5LDz_ky1SCQxPeFK4",
+  authDomain: "love-cook-g9.firebaseapp.com",
+  projectId: "love-cook-g9",
+  storageBucket: "love-cook-g9.appspot.com",
+  messagingSenderId: "613944284205",
+  appId: "1:613944284205:web:846e3eea191973295b94a4",
+  measurementId: "G-2QBVB45V4G",
 };

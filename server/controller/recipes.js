@@ -100,19 +100,22 @@ const getRecipesByID = async (req, res) => {
 
 const postRecipeControl = async (req, res) => {
   try {
-    // const { token } = req.cookies;
-    console.log("req.body: ", req.body);
     const recipe = req.body.recipe;
-    const { recipe_name, nutrition, ingredients_list, tagname, rating } =
-      recipe;
-
+    const {
+      recipe_name,
+      nutrition,
+      ingredients_list,
+      tagname,
+      rating,
+      img_src,
+      cook_time,
+      prep_time,
+    } = recipe;
 
     const user = await User.findOne({ account: req.userid }).populate(
       "account",
       ["email"]
     );
-
-    console.log("Found user: ", user);
 
     if (!user) {
       return res
@@ -120,17 +123,23 @@ const postRecipeControl = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
-    const maxRecipeId = await RecipeModel.estimatedDocumentCount();
+    const maxRecipeId = await Recipe.estimatedDocumentCount();
     const recipe_id = maxRecipeId + 1;
 
-    const newRecipe = new RecipeModel({
+    console.log(recipe_id);
+
+    const newRecipe = new Recipe({
       recipe_id: recipe_id,
       recipe_name: recipe_name,
       nutrition: nutrition,
       ingredients_list: ingredients_list,
       tagname: tagname,
+      cook_time: cook_time,
+      prep_time: prep_time,
       rating: rating,
       author: user.user_id,
+      img_src: img_src,
+      created_time: new Date(),
     });
 
     await newRecipe.save();
@@ -139,7 +148,11 @@ const postRecipeControl = async (req, res) => {
 
     await user.save();
 
-    res.json({ success: true, message: "Recipe created successfully" });
+    res.json({
+      success: true,
+      message: "Recipe created successfully",
+      recipe_id: recipe_id,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, error: "Internal server error" });

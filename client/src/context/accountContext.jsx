@@ -1,5 +1,0 @@
-/* eslint-disable no-unused-vars */
-import { useState, createContext } from "react";
-import ReactDOM from "react-dom/client";
-
-export const AccountContext = createContext(null);

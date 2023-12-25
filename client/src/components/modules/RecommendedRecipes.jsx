@@ -30,7 +30,7 @@ const RecommendRecipe = () => {
         <div className="container border-t mx-auto px-4 py-7">
             <h2 className="text-2xl font-bold mb-6">Recommended recipes</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4">
-                {listRecipes.slice(0, recipesToShow).map((recipe, index) => (
+                {listRecipes && listRecipes.slice(0, recipesToShow).map((recipe, index) => (
                     <Link to={`/recipes/?ID=${recipe.recipe_id}`} key={recipe.recipe_id}>
                         <div
                             key={index}

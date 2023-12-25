@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../modules/Navbar";
 import Footer from "../modules/Footer";
 import deleteIcon from "../../assets/trash_can.svg";
@@ -6,11 +7,19 @@ import EditIcon from "../../assets/edit.png";
 import starIcon from "../../assets/star.png";
 import clockIcon from "../../assets/clock.png";
 import Loading from "../modules/Loading";
+import { useCookies } from "react-cookie";
 import {
   handleGetRecipesUser,
   handleDeleteRecipes,
 } from "../../action/userAction";
+
 const Recipe = (recipe) => {
+  const navigate = useNavigate();
+  const navigationEditRecipes = () => {
+    navigate(`/edit-recipe/${recipe.recipe_id}`);
+  };
+
+  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
       <div className="bg-white rounded-lg shadow pl-10 h-64 grid grid-cols-4 w-2/3 items-center justify-center ">
@@ -44,11 +53,18 @@ const Recipe = (recipe) => {
         </div>
 
         <div className="col-span-1 flex items-center justify-center ml-10 space-x-5">
-          <img className="h-10 w-10" src={EditIcon} alt="" />
+          <button
+            className="bg-white-300 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded"
+            onClick={() => navigationEditRecipes()}
+          >
+            <img className="h-5 w-10" src={EditIcon} alt="" />
+          </button>
 
           <button
             className="bg-white-300 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded"
-            onClick={() => handleDeleteRecipes(recipe.recipe_id)}
+            onClick={() =>
+              handleDeleteRecipes(recipe.recipe_id, cookies.accessToken)
+            }
           >
             <img className="h-10 w-10" src={deleteIcon} alt="" />
           </button>
@@ -61,15 +77,16 @@ const Recipe = (recipe) => {
 const RecipeManager = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
 
   useEffect(() => {
     setLoading(true);
-    const fetchRcipes = async () => {
-      const recipeUser = await handleGetRecipesUser();
+    const fetchRecipes = async () => {
+      const recipeUser = await handleGetRecipesUser(cookies.accessToken);
       setRecipes(recipeUser);
     };
 
-    fetchRcipes();
+    fetchRecipes();
     setLoading(false);
   }, [recipes]);
 
@@ -80,8 +97,6 @@ const RecipeManager = () => {
       </div>
     );
   }
-
-  console.log("recipes : ", recipes);
 
   return (
     <div className="flex flex-col min-h-screen bg-red-100 ">

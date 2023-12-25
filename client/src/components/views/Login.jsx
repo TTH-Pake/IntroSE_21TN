@@ -1,16 +1,30 @@
-import { useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { handleLogin, handleLoginWithGoogle } from "../../action/accountAction";
+import {
+  handleLogin,
+  handleLoginWithGoogle,
+  handleLoginWithGoogle1,
+} from "../../action/accountAction";
+
+// import GoogleLogin from "react-google-login";
+
 import Logo from "../../assets/logo-recipe.png";
 import GoogleIcon from "../../assets/google.png";
 import FacebookIcon from "../../assets/facebook.png";
 import { message } from "antd";
+import { useCookies } from "react-cookie";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
   const navigate = useNavigate();
   const location = useLocation();
+
+  if (cookies.accessToken) {
+    navigate(location.state?.from || "/home");
+  }
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -22,7 +36,7 @@ export default function Login() {
       message.warning("Vui lòng điền đầy đủ thông tin");
       return;
     }
-    const userId = await handleLogin(userData);
+    const userId = await handleLogin(userData, setCookie);
     if (userId) {
       navigate(location.state?.from || "/home");
     } else {
@@ -31,7 +45,7 @@ export default function Login() {
   };
 
   const onLoginWithGoogle = async () => {
-    const isLoggedIn = await handleLoginWithGoogle();
+    const isLoggedIn = await handleLoginWithGoogle1();
     if (isLoggedIn) {
       navigate(location.state?.from || "/home");
     }
@@ -112,13 +126,13 @@ export default function Login() {
             </div>
 
             <div className="flex justify-center space-x-4">
-              <button
+              <Link
                 className="btn w-[50%] py-1.5 rounded-full mt-2 text-black text-base text-center cursor-pointer bg-white hover:font-semibold hover:shadow-lg transition duration-300 flex items-center justify-center"
                 onClick={onLoginWithGoogle}
               >
                 <img src={GoogleIcon} alt="Google Icon" className="w-6 h-6" />
                 <span className="ml-2">Google</span>
-              </button>
+              </Link>
               <button className="btn w-[50%] py-1.5 rounded-full mt-2 text-black text-base text-center cursor-pointer bg-white hover:font-semibold hover:shadow-lg transition duration-300 flex items-center justify-center">
                 <img
                   src={FacebookIcon}

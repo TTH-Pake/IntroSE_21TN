@@ -6,7 +6,6 @@ const Comment = require("../model/commentModel");
 
 const createCommentControl = async (req, res) => {
   const commentData = req.body;
-  console.log(commentData)
   try {
     const newComment = new Comment(commentData);
     const savedComment = await newComment.save();

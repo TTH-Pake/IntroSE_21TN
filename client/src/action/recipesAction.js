@@ -5,7 +5,7 @@ import { message } from "antd";
 // Get recomended recipes
 export const handleRecommendedRecipes = async () => {
   try {
-    const result = await axios.get("http://127.0.0.1:8000/home");
+    const result = await axios.get("http://127.0.0.1:8000/");
 
     if (result.data.success === true) {
       return result.data.recommended_recipes;
@@ -20,8 +20,7 @@ export const handleRecommendedRecipes = async () => {
 
 export const handleRankingRecipes = async () => {
   try {
-    const result = await axios.get("http://127.0.0.1:8000/");
-
+    const result = await axios.get("http://127.0.0.1:8000/home");
     if (result.data.success === true) {
       return result.data.ranking_recipes;
     } else {
@@ -63,9 +62,7 @@ export const handleSearchRecipesID = async (ID) => {
   return false;
 };
 
-export const handleCreateRecipe = async (recipe) => {
-  // const accessToken = Cookies.get("accessToken");
-  const accessToken = localStorage.getItem("accessToken");
+export const handleCreateRecipe = async (recipe, accessToken) => {
   try {
     const result = await axios.post(
       "http://127.0.0.1:8000/recipe/create",
@@ -76,19 +73,17 @@ export const handleCreateRecipe = async (recipe) => {
         },
       }
     );
-    console.log(result);
+
     if (result.data.success === true) {
-      console.log(result.data.message);
       message.success("Create successfully!");
-      return true;
+      return result.data.recipe_id;
     } else {
-      console.log(result.data.message);
       message.error(result.data.message);
     }
   } catch (err) {
     console.log(err);
   }
-  return false;
+  return null;
 };
 
 export const handleGetCommentsByRecipeId = async (recipeId) => {

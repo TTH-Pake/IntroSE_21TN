@@ -16,13 +16,13 @@ const Others = () => {
         <div className="text-center font-semibold flex flex-col gap-4">
           <button
             className="bg-yellow-300 hover:bg-yellow-400 text-black py-3 px-48 rounded-full"
-            // onClick={() => handleNavigate('/register-vip')}
+          // onClick={() => handleNavigate('/register-vip')}
           >
             Đăng kí VIP
           </button>
           <button
             className="bg-yellow-300 hover:bg-yellow-400 text-black py-3 px-48 rounded-full"
-            // onClick={() => handleNavigate('/change-password')}
+          // onClick={() => handleNavigate('/change-password')}
           >
             Đổi mật khẩu
           </button>
@@ -32,9 +32,10 @@ const Others = () => {
           >
             About us
           </button>
+
           <button
             className="bg-yellow-300 hover:bg-yellow-400 text-black py-3 px-48 rounded-full"
-            // onClick={() => handleNavigate('/feedback')}
+            onClick={() => handleNavigate('/feedback')}
           >
             Góp ý
           </button>

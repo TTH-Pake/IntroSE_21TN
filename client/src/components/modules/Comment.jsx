@@ -1,58 +1,56 @@
-import { useEffect, useState } from 'react';
-import { message } from 'antd';
+import { useEffect, useState } from "react";
+import { message } from "antd";
 import avatarIcon from "/src/assets/avatar.png";
-import PropTypes from 'prop-types';
 import { handleGetCommentsByRecipeId } from "../../action/recipesAction";
+import { handleGetUserByID } from "../../action/userAction";
 
 const Comment = ({ comments }) => {
-    // useEffect(() => {
-    //     const fetchComments = async () => {
-    //         try {
-    //             const result = await handleGetCommentsByRecipeId(recipeId);
+  const [detailedComments, setDetailedComments] = useState([]);
 
-    //             if (result.success === true) {
-    //                 setComments(result.comments);
-    //             } else {
-    //                 message.error(result.message);
-    //             }
-    //         } catch (err) {
-    //             console.log(err);
-    //             message.error('Failed to get comments');
-    //         }
-    //     };
+  useEffect(() => {
+    const fetchComments = async () => {
+      let newComments = [];
+      for (const comment of comments) {
+        try {
+          const result = await handleGetUserByID(comment.user_id);
 
-    //     fetchComments();
-    // }, [recipeId]);
+          newComments.push({
+            user_name: result.name,
+            content: comment.content,
+          });
+        } catch (error) {
+          console.error("Error fetching comments:", error.message);
+        }
+      }
 
-    return (
-        <div>
-            <ul>
-                {comments && comments.length > 0 ? (
-                    comments.map((comment, index) => (
-                        <div key={index} className="mb-2 flex">
-                            <img
-                                src={avatarIcon}
-                                alt="Avatar"
-                                className="h-8 w-8 rounded-full mr-3 mt-1"
-                            />
-                            <div>
-                                <p className="font-bold">{comment.user_id.name}</p>
-                                <p>{comment.content}</p>
+      setDetailedComments(newComments);
+    };
 
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <li>No comments available.</li>
-                )}
-            </ul>
-        </div>
-    );
+    fetchComments();
+  }, [comments]); // Include comments in the dependency array
+  return (
+    <div>
+      <ul>
+        {detailedComments && detailedComments.length > 0 ? (
+          detailedComments.map((comment, index) => (
+            <div key={index} className="mb-2 flex">
+              <img
+                src={avatarIcon}
+                alt="Avatar"
+                className="h-8 w-8 rounded-full mr-3 mt-1"
+              />
+              <div>
+                <p className="font-bold">{comment.user_name}</p>
+                <p>{comment.content}</p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <li>No comments available.</li>
+        )}
+      </ul>
+    </div>
+  );
 };
 
-// Comment.propTypes = {
-//     recipeId: PropTypes.string.isRequired,
-// };
-
 export default Comment;
-

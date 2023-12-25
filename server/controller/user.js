@@ -5,6 +5,9 @@ const jwt = require("jsonwebtoken");
 const User = require("../model/userModel");
 const Account = require("../model/accountModel");
 const Recipe = require("../model/recipeModel");
+const Comment = require("../model/commentModel");
+const Blog = require("../model/blogModel");
+
 const verifyToken = require("../middleware/account");
 const mongoose = require("mongoose");
 
@@ -63,7 +66,6 @@ const createUserControl = async (req, res) => {
   }
 
   try {
-    console.log(req.userid);
     const newUser = new User({
       user_id: user_id,
       name: name,
@@ -75,6 +77,23 @@ const createUserControl = async (req, res) => {
     res
       .status(200)
       .json({ success: true, message: "Create user success", user: newUser });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const getUserByUserIdControl = async (req, res) => {
+  const userID = req.params.user_id;
+  try {
+    const user = await User.findOne({ user_id: userID });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, message: "User found", user: user });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -119,7 +138,6 @@ const addFavouriteControl = async (req, res) => {
     let { recipeId } = req.body; // ID của công thức từ request body
 
     recipeId = parseInt(recipeId);
-    console.log(recipeId);
 
     // Tìm người dùng và thêm ID công thức vào mục yêu thích
     const user = await User.findOneAndUpdate(
@@ -208,7 +226,6 @@ const getRecipeManagerControl = async (req, res) => {
   }
 
   const recipesIds_list = user.user_recipes;
-  console.log(recipesIds_list);
 
   if (user.is_admin === false) {
     const recipes = await Recipe.find({ recipe_id: { $in: recipesIds_list } });
@@ -219,10 +236,33 @@ const getRecipeManagerControl = async (req, res) => {
   }
 };
 
+const getBlogManagerControl = async (req, res) => {
+  try {
+    const user = await User.findOne({ account: req.userid });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    if (user.is_admin === false) {
+      const blogs = await Blog.find({ user_id: user.user_id });
+      return res.status(200).json({ success: true, blogs });
+    } else {
+      const blogs = await Blog.find({});
+      return res.status(200).json({ success: true, blogs });
+    }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 const deleteRecipeControl = async (req, res) => {
   try {
     const recipeID = req.body.recipe_id;
-    console.log("recipeID ", recipeID);
 
     const roleUser = await User.findOne({ account: req.userid });
     // Find the user and remove the recipeID from the user_recipes array
@@ -232,8 +272,6 @@ const deleteRecipeControl = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
-    console.log("roleUser.is_admin ", roleUser.is_admin);
-
     if (roleUser.is_admin === false) {
       await User.findOneAndUpdate(
         { account: req.userid },
@@ -241,6 +279,7 @@ const deleteRecipeControl = async (req, res) => {
         { new: true } // This option returns the updated document
       );
       await Recipe.findOneAndDelete({ recipe_id: recipeID });
+      await Comment.deleteMany({ recipe_id: recipeID });
     }
 
     // Find the recipe and remove the recipe from the recipe collection
@@ -252,6 +291,7 @@ const deleteRecipeControl = async (req, res) => {
         { new: true } // This option returns the updated document
       );
       await Recipe.findOneAndDelete({ recipe_id: recipeID });
+      await Comment.deleteMany({ recipe_id: recipeID });
     }
 
     if (!roleUser) {
@@ -268,15 +308,110 @@ const deleteRecipeControl = async (req, res) => {
   }
 };
 
+const editRecipeControl = async (req, res) => {
+  try {
+    const recipeID = req.params.recipeId;
+
+    const recipe = await Recipe.findOne({ recipe_id: recipeID });
+
+    if (!recipe) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Recipe not found" });
+    }
+
+    const roleUser = await User.findOne({ account: req.userid });
+
+    if (!roleUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    if (roleUser.is_admin === false) {
+      if (recipe.author !== roleUser.user_id) {
+        return res.status(403).json({ success: false, message: "Forbidden" });
+      }
+    }
+
+    const {
+      recipe_name,
+      prep_time,
+      cook_time,
+      ingredients_list,
+      directions,
+      nutritions,
+      img_src,
+    } = req.body;
+
+    if (recipe_name) {
+      recipe.recipe_name = recipe_name;
+    }
+
+    if (prep_time){
+      recipe.prep_time = prep_time;
+    }
+
+    if (cook_time){
+      recipe.cook_time = cook_time;
+    }
+
+    if (ingredients_list) {
+      recipe.ingredients_list = ingredients_list;
+    }
+
+    if (directions) {
+      recipe.directions = directions;
+      }
+    if (nutritions) {
+      recipe.nutritions = nutritions;
+    }
+
+    if (img_src) {
+      recipe.img_src = img_src;
+    }
+
+    await recipe.save();
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Recipe updated successfully", recipe });
+  } catch (error) {
+    // message.error(error.message);
+  }
+};
+
+const updateProfile = async (req, res) => {
+  const userId = req.params.userId;
+  const updatedProfile = req.body;
+
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { user_id: userId },
+      { $set: updatedProfile },
+      { new: true }
+    );
+    // Trả về người dùng đã được cập nhật
+    res.json({ success: true, user: updatedUser });
+  } catch (error) {
+    console.error("Error updating user profile:", error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   getAllUsersControl,
   getAccountControl,
   createUserControl,
+  getUserByUserIdControl,
   getProfileControl,
   getFavouriteControl,
   addFavouriteControl,
   deleteUser,
   changePassword,
   getRecipeManagerControl,
+  getBlogManagerControl,
   deleteRecipeControl,
+  editRecipeControl,
+  updateProfile,
 };

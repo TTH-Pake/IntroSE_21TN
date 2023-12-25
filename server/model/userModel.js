@@ -47,9 +47,30 @@ const schema = new Schema({
     default: [],
   },
 
+  profile_image: {
+    type: String,
+    default: "",
+  },
+
+  last_login: {
+    type: Date,
+    default: Date.now,
+  },
+
+  google_id: {
+    type: String,
+    default: null,
+  },
+
+  facebook_id: {
+    type: String,
+    default: null,
+  },
+
   account: {
     type: Schema.Types.ObjectId,
     ref: "accounts",
+    required: false,
   },
   phone: { type: String },
 });

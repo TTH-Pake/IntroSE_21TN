@@ -39,11 +39,18 @@ const Menu = ({ showMenu, setShowMenu, onClick }) => {
             Blog
           </button>
           <button
+            onClick={() => navigateToPage("/feedback")}
+            className="block w-full px-4 py-2 text-middle border-b hover:bg-gray-200"
+          >
+            FeedBack
+          </button>
+          <button
             onClick={() => navigateToPage("/others")}
             className="block w-full px-4 py-2 text-middle rounded hover:bg-gray-200"
           >
             Khác
           </button>
+
         </div>
       )}
     </div>

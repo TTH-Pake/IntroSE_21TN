@@ -46,7 +46,7 @@ const Search = () => {
     };
 
     fetchIngredients();
-  }, []);
+  }, [keywords]);
 
   const handleAvatarClick = () => {
     setShowLoginForm(!showLoginForm);
@@ -60,6 +60,7 @@ const Search = () => {
     var keyWordSearch = selectedIngredients.join(',') + ',' + name;
     if (selectedIngredients.length === 0 || name === "")
       keyWordSearch = selectedIngredients.join(',') + name;
+
     if (keyWordSearch === "") {
       message.warning("Vui lòng điền thông tin tìm kiếm");
       return;
