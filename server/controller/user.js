@@ -240,20 +240,23 @@ const getBlogManagerControl = async (req, res) => {
   try {
     const user = await User.findOne({ account: req.userid });
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     if (user.is_admin === false) {
       const blogs = await Blog.find({ user_id: user.user_id });
       return res.status(200).json({ success: true, blogs });
-    }
-    else {
+    } else {
       const blogs = await Blog.find({});
       return res.status(200).json({ success: true, blogs });
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
   }
 };
 
@@ -305,6 +308,79 @@ const deleteRecipeControl = async (req, res) => {
   }
 };
 
+const editRecipeControl = async (req, res) => {
+  try {
+    const recipeID = req.params.recipeId;
+
+    const recipe = await Recipe.findOne({ recipe_id: recipeID });
+
+    if (!recipe) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Recipe not found" });
+    }
+
+    const roleUser = await User.findOne({ account: req.userid });
+
+    if (!roleUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    if (roleUser.is_admin === false) {
+      if (recipe.author !== roleUser.user_id) {
+        return res.status(403).json({ success: false, message: "Forbidden" });
+      }
+    }
+
+    const {
+      recipe_name,
+      prep_time,
+      cook_time,
+      ingredients_list,
+      directions,
+      nutritions,
+      img_src,
+    } = req.body;
+
+    if (recipe_name) {
+      recipe.recipe_name = recipe_name;
+    }
+
+    if (prep_time){
+      recipe.prep_time = prep_time;
+    }
+
+    if (cook_time){
+      recipe.cook_time = cook_time;
+    }
+
+    if (ingredients_list) {
+      recipe.ingredients_list = ingredients_list;
+    }
+
+    if (directions) {
+      recipe.directions = directions;
+      }
+    if (nutritions) {
+      recipe.nutritions = nutritions;
+    }
+
+    if (img_src) {
+      recipe.img_src = img_src;
+    }
+
+    await recipe.save();
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Recipe updated successfully", recipe });
+  } catch (error) {
+    // message.error(error.message);
+  }
+};
+
 const updateProfile = async (req, res) => {
   const userId = req.params.userId;
   const updatedProfile = req.body;
@@ -336,5 +412,6 @@ module.exports = {
   getRecipeManagerControl,
   getBlogManagerControl,
   deleteRecipeControl,
+  editRecipeControl,
   updateProfile,
 };

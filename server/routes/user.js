@@ -63,4 +63,6 @@ router.post("/deleteRecipe", verifyToken, userController.deleteRecipeControl);
 // @access private
 router.put("/updateProfile/:userId", userController.updateProfile);
 
+router.put(`/edit-recipe/:recipeId`,verifyToken,userController.editRecipeControl);
+
 module.exports = router;

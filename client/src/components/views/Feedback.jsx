@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import NavBar from "../modules/Navbar";
 import Footer from "../modules/Footer";
 import FeedbackIcon from "../../assets/feedback.png";
+import { notify_success,notify_fail,Toast_Container } from '../../toast';
 const FeedBack = () => {
     const [form, setForm] = useState({
         name: '',
@@ -17,7 +18,13 @@ const FeedBack = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(form);
+        notify_success("Feedback submitted successfully");
+        setForm({
+            name: '',
+            email: '',
+            feedback: '',
+            satisfaction: '',
+        }); 
     };
 
     return (
@@ -97,6 +104,7 @@ const FeedBack = () => {
                         >
                             Submit
                         </button>
+                        <Toast_Container/>
                     </form>
                 </div>
             </div>
