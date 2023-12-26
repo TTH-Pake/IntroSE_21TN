@@ -11,7 +11,8 @@ import Avatar from "../modules/Avatar";
 import loupe from "/src/assets/loupe.png";
 import commentIcon from "/src/assets/chat.png";
 import likeIcon from "/src/assets/heart.png";
-
+import Menu from "../modules/Menu";
+import NavBar from "../modules/Navbar";
 const initialRecipesToShow = 10;
 
 const Search = () => {
@@ -57,9 +58,9 @@ const Search = () => {
   const handleSearch = (event) => {
     event.preventDefault();
 
-    var keyWordSearch = selectedIngredients.join(',') + ',' + name;
+    var keyWordSearch = selectedIngredients.join(",") + "," + name;
     if (selectedIngredients.length === 0 || name === "")
-      keyWordSearch = selectedIngredients.join(',') + name;
+      keyWordSearch = selectedIngredients.join(",") + name;
 
     if (keyWordSearch === "") {
       message.warning("Vui lòng điền thông tin tìm kiếm");
@@ -114,42 +115,7 @@ const Search = () => {
 
   return (
     <div className="container border-t mx-auto">
-      <nav className="navbar flex flex-col relative items-center justify-center align-middle px-6 h-[80px] bg-white border-b">
-        <Link to="/home">
-          <LogoIcon className="flex-shrink-0" />
-        </Link>
-
-        <div className="relative w-1/2 rounded-lg">
-          <form onSubmit={handleSearch}>
-            <input
-              className="search-input w-full px-4 py-2 border bg-green-500 outline-none placeholder-gray-700 pl-10"
-              style={{ borderRadius: "12px" }}
-              type="text"
-              placeholder="Tìm kiếm công thức..."
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-            />
-
-            <button
-              onClick={handleSearch}
-              type="submit"
-              className="absolute top-1/2 right-3 transform -translate-y-1/2"
-            >
-              <img src={loupe} alt="Search" className="w-4 h-4" />
-            </button>
-          </form>
-        </div>
-
-        <div className="flex-shrink-0 flex items-center space-x-10 bg-white">
-          <Avatar
-            showLoginForm={showLoginForm}
-            setShowLoginForm={setShowLoginForm}
-            onClick={handleAvatarClick}
-          />
-        </div>
-      </nav>
+      <NavBar />
 
       <div className="flex">
         <div className="px-3 w-1/4 p-7 mr-2">
@@ -182,13 +148,25 @@ const Search = () => {
                 onClick={toggleDropdown}
               >
                 <span className="mr-2">Ingredients</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5 ml-2 -mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </button>
               <div
                 id="dropdown-menu"
-                className={`absolute w-full right-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1 ${isOpen ? '' : 'hidden'}`}
+                className={`absolute w-full right-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1 ${
+                  isOpen ? "" : "hidden"
+                }`}
               >
                 <input
                   id="search-input"
@@ -203,9 +181,7 @@ const Search = () => {
                   {renderIngredientList()}
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
 
