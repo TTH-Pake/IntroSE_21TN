@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../modules/Navbar";
 import Footer from "../modules/Footer";
 import deleteIcon from "../../assets/trash_can.svg";
@@ -25,11 +25,16 @@ const Recipe = (recipe) => {
       <div className="bg-white rounded-lg shadow pl-10 h-64 grid grid-cols-4 w-2/3 items-center justify-center ">
         <div className="col-span-3 flex items-center ">
           <div className="w-2/3 overflow-hidden">
-            <img
-              className="object-cover h-48 w-full rounded"
-              src={recipe.img_src}
-              alt=""
-            />
+            <Link
+              to={`/recipes/?ID=${recipe.recipe_id}`}
+              key={recipe.recipe_id}
+            >
+              <img
+                  className="object-cover h-48 w-full rounded transform transition duration-500 hover:scale-105"
+                src={recipe.img_src}
+                alt=""
+              />
+            </Link>
           </div>
 
           <div className="w-1/2 space-y-5">
