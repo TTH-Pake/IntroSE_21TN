@@ -11,6 +11,7 @@ import Avatar from "../modules/Avatar";
 import loupe from "/src/assets/loupe.png";
 import commentIcon from "/src/assets/chat.png";
 import likeIcon from "/src/assets/heart.png";
+import Menu from "../modules/Menu";
 
 const initialRecipesToShow = 10;
 
@@ -25,6 +26,7 @@ const Search = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [ingredients, setIngredients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     const fetchRecommendedRecipes = async () => {
@@ -50,6 +52,12 @@ const Search = () => {
 
   const handleAvatarClick = () => {
     setShowLoginForm(!showLoginForm);
+    setShowMenu(false);
+  };
+
+  const handleMenuClick = () => {
+    setShowMenu(!showMenu);
+    setShowLoginForm(false);
   };
 
   const navigate = useNavigate();
@@ -57,9 +65,9 @@ const Search = () => {
   const handleSearch = (event) => {
     event.preventDefault();
 
-    var keyWordSearch = selectedIngredients.join(',') + ',' + name;
+    var keyWordSearch = selectedIngredients.join(",") + "," + name;
     if (selectedIngredients.length === 0 || name === "")
-      keyWordSearch = selectedIngredients.join(',') + name;
+      keyWordSearch = selectedIngredients.join(",") + name;
 
     if (keyWordSearch === "") {
       message.warning("Vui lòng điền thông tin tìm kiếm");
@@ -148,6 +156,11 @@ const Search = () => {
             setShowLoginForm={setShowLoginForm}
             onClick={handleAvatarClick}
           />
+          <Menu
+            showMenu={showMenu}
+            setShowMenu={setShowMenu}
+            onClick={handleMenuClick}
+          />
         </div>
       </nav>
 
@@ -182,13 +195,25 @@ const Search = () => {
                 onClick={toggleDropdown}
               >
                 <span className="mr-2">Ingredients</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5 ml-2 -mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </button>
               <div
                 id="dropdown-menu"
-                className={`absolute w-full right-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1 ${isOpen ? '' : 'hidden'}`}
+                className={`absolute w-full right-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1 ${
+                  isOpen ? "" : "hidden"
+                }`}
               >
                 <input
                   id="search-input"
@@ -203,9 +228,7 @@ const Search = () => {
                   {renderIngredientList()}
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
 
