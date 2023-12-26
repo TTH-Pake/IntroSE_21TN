@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import NavBar from "../components/modules/Navbar";
-import Footer from "../components/modules/Footer";
-import changePWImage from "../assets/changePW.png";
-import banImage from "../assets/ban.png";
-import searchIcon from "../assets/loupe.png";
+import NavBar from "../modules/Navbar";
+import Footer from "../modules/Footer";
+import changePWImage from "../../assets/changePW.png";
+import banImage from "../../assets/ban.png";
+import searchIcon from "../../assets/loupe.png";
 
 const users = [
   {
