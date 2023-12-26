@@ -138,10 +138,10 @@ const Admin = () => {
                     {user.account
                       ? user.account.email
                       : user.google_id
-                      ? "Google Account"
-                      : user.facebook_id
-                      ? "Facebook Account"
-                      : "Cant find email"}
+                        ? "Google Account"
+                        : user.facebook_id
+                          ? "Facebook Account"
+                          : "Cant find email"}
                   </td>
                   <td className="border px-4 py-2">{user.name}</td>
                   <td className="border px-4 py-2">
