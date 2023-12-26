@@ -28,6 +28,7 @@ router.post("/", verifyToken, userController.createUserControl);
 
 router.get("/profile", verifyToken, userController.getProfileControl);
 
+router.get("/favourites", verifyToken, userController.getFavouriteRecipesControl);
 router.post("/favourites", verifyToken, userController.addFavouriteControl);
 
 // router.put("/edit", verifyToken, userController.editProfileUserControl);

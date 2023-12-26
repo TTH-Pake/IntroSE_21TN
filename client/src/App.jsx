@@ -21,6 +21,7 @@ import { CookiesProvider, useCookies } from "react-cookie";
 import NoPage from "./components/views/NoPage";
 import BlogManager from "./components/views/BlogManager";
 import UpdateRecipe from "./components/views/EditRecipe";
+import FavouriteRecipes from "./components/views/Favourites";
 
 function App() {
   const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
@@ -36,7 +37,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="create-recipe" element={<CreateRecipe />} />
-              <Route path="/edit-recipe/:recipeid" element={<UpdateRecipe/>} />
+              <Route path="/edit-recipe/:recipeid" element={<UpdateRecipe />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
               <Route path="about-us" element={<AboutUs />} />
@@ -52,6 +53,7 @@ function App() {
               <Route path="users/recipe-manager" element={<RecipeManager />} />
               <Route path="/feedback" element={<FeedBack />} />
               <Route path="users/blogManager" element={<BlogManager />} />
+              <Route path="users/favourites" element={<FavouriteRecipes />} />
               <Route path="*" element={<NoPage />} />
             </Route>
           </Routes>

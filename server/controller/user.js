@@ -116,6 +116,19 @@ const getProfileControl = async (req, res) => {
   }
 };
 
+const getFavouriteRecipesControl = async (req, res) => {
+  const user = await User.findOne({ account: req.userid });
+  
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+
+  const favouriteRecipeIds = user.favourites;
+
+  const recipes = await Recipe.find({ recipe_id: { $in: favouriteRecipeIds } });
+  return res.status(200).json({ success: true, recipes: recipes });
+};
+
 const getFavouriteControl = async (req, res) => {
   try {
     const fauvorite_recipes = await User.find({ account: req.userid }).populate(
@@ -418,6 +431,7 @@ module.exports = {
   createUserControl,
   getUserByUserIdControl,
   getProfileControl,
+  getFavouriteRecipesControl,
   getFavouriteControl,
   addFavouriteControl,
   deleteUser,
