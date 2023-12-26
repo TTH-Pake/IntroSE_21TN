@@ -390,7 +390,7 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
       ingredients_list: ingredientsList,
       directions: directions,
       nutritions: nutritions,
-      img_src:"",
+      img_src: "",
     };
 
     console.log(recipe);

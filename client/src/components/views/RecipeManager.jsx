@@ -52,12 +52,12 @@ const Recipe = (recipe) => {
           </div>
         </div>
 
-        <div className="col-span-1 flex items-center justify-center ml-10 space-x-5">
+        <div className="col-span-1 flex items-center justify-center ml-10">
           <button
             className="bg-white-300 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded"
             onClick={() => navigationEditRecipes()}
           >
-            <img className="h-5 w-10" src={EditIcon} alt="" />
+            <img className="h-10 w-10" src={EditIcon} alt="" />
           </button>
 
           <button
