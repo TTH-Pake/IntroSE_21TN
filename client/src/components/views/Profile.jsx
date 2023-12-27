@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
-import { handleGetCurrentUser, updateUserProfile } from "../../action/userAction";
+import {
+  handleGetCurrentUser,
+  updateUserProfile,
+} from "../../action/userAction";
 import {
   BlogIcon,
   EditIcon,
@@ -12,7 +15,7 @@ import {
   RecipeIcon,
   fbIcon,
   instaIcon,
-  twIcon
+  twIcon,
 } from "../../assets";
 import Footer from "../modules/Footer";
 import Loading from "../modules/Loading";
@@ -112,7 +115,7 @@ const Profile = () => {
                 <div className="flex items-center justify-center space-x-3">
                   <img className="h-5 w-5" src={FavoriteIcon} alt="" />
                   <a
-                    href="/favorites"
+                    href="/users/favourites"
                     className="flex-grow bg-green-400 text-black p-2.5 my-2 rounded-r-full transition duration-300 ease-in-out hover:bg-green-500 shadow-md"
                   >
                     Favorite recipes

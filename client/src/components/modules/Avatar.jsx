@@ -31,6 +31,7 @@ const Avatar = ({ showLoginForm, setShowLoginForm, onClick }) => {
 
   const navigateToLogin = () => {
     // setShowLoginForm(true);
+    handleLogout(removeCookie);
     navigate("/login");
   };
 

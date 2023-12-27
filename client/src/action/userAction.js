@@ -56,6 +56,28 @@ export const handleGetUserByID = async (user_id) => {
   }
 };
 
+export const handleGetFavouriteRecipesUser = async (accessToken) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const favouriteRecipes = await axios.get(
+      "http://127.0.0.1:8000/users/favourites", // Update the endpoint
+      config
+    );
+
+    if (favouriteRecipes.data.success) {
+      return favouriteRecipes.data.recipes;
+    }
+  } catch (error) {
+    console.error("Error fetching favourite recipes:", error.message);
+    throw error;
+  }
+};
+
 export const handleGetRecipesUser = async (accessToken) => {
   try {
     const config = {

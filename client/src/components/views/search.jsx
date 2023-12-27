@@ -26,6 +26,7 @@ const Search = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [ingredients, setIngredients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     const fetchRecommendedRecipes = async () => {
@@ -51,6 +52,12 @@ const Search = () => {
 
   const handleAvatarClick = () => {
     setShowLoginForm(!showLoginForm);
+    setShowMenu(false);
+  };
+
+  const handleMenuClick = () => {
+    setShowMenu(!showMenu);
+    setShowLoginForm(false);
   };
 
   const navigate = useNavigate();
