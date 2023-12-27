@@ -4,9 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { useCookies } from "react-cookie";
 import { checkAuth } from "../../action/accountAction";
-import {
-  handleSearchRecipesID
-} from "../../action/recipesAction";
+import { handleSearchRecipesID } from "../../action/recipesAction";
 import {
   handleGetCurrentUser,
   handleUpdateRecipe,
@@ -367,6 +365,9 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
     const fetchRecipeData = async () => {
       const recipeData = await handleSearchRecipesID(recipe_id);
 
+      if (!recipeData.directions) {
+        recipeData.directions = "";
+      }
       const recipe_directions = recipeData.directions.split(/\.\n|\./);
       const step_directions = recipe_directions.filter((step) => step !== "");
 
@@ -390,7 +391,7 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
       ingredients_list: ingredientsList,
       directions: directions,
       nutritions: nutritions,
-      img_src:"",
+      img_src: "",
     };
 
     console.log(recipe);
