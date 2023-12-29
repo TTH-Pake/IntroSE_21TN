@@ -16,4 +16,16 @@ const getAllIngredients = async (req, res) => {
     }
 };
 
-module.exports = { getAllIngredients };
+const getAllIngredientsAndID = async (req, res) => {
+    try {
+        // Fetch all ingredients
+        const ingredients = await Ingredient.find({}, { id: 1, name: 1 });
+        res.json({ success: true, ingredients });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+
+module.exports = { getAllIngredients,getAllIngredientsAndID};

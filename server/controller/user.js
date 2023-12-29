@@ -368,8 +368,11 @@ const editRecipeControl = async (req, res) => {
       directions,
       nutritions,
       img_src,
+      ingredients,
     } = req.body;
 
+    console.log(ingredients);
+    
     if (recipe_name) {
       recipe.recipe_name = recipe_name;
     }
@@ -395,6 +398,10 @@ const editRecipeControl = async (req, res) => {
 
     if (img_src) {
       recipe.img_src = img_src;
+    }
+
+    if (ingredients) {
+      recipe.ingredients = ingredients;
     }
 
     await recipe.save();

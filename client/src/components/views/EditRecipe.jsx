@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { useCookies } from "react-cookie";
 import { checkAuth } from "../../action/accountAction";
+import { handleGetAllIngredientID } from "../../action/ingredientAction";
 import { handleSearchRecipesID } from "../../action/recipesAction";
 import {
   handleGetCurrentUser,
@@ -355,6 +356,8 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
   const [prepTime, setPrepTime] = useState("");
   const [cookTime, setCookTime] = useState("");
   const [ingredientsList, setIngredientsList] = useState([]); // ["100g flour", "100ml water" ...
+  const [ingredients, setIngredients] = useState([]); // ["flour", "water" ...
+  const [ingredientIDs, setIngredientIDs] = useState([]); // [1, 2, 3, ...
   const [steps, setSteps] = useState([]);
   const [nutritions, setNutritions] = useState([]); // ["Fat 10g  20%", "Protein 20g  40%", ...
   const [directions, setDirections] = useState(""); // ["Pour water into a bowl", "Mix flour with water" ...
@@ -364,17 +367,17 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
   useEffect(() => {
     const fetchRecipeData = async () => {
       const recipeData = await handleSearchRecipesID(recipe_id);
-
       if (!recipeData.directions) {
         recipeData.directions = "";
       }
       const recipe_directions = recipeData.directions.split(/\.\n|\./);
       const step_directions = recipe_directions.filter((step) => step !== "");
-
+  
       setRecipeName(recipeData?.recipe_name);
       setPrepTime(recipeData?.prep_time);
       setCookTime(recipeData?.cook_time);
       setIngredientsList(recipeData?.ingredients_list);
+      setIngredients(recipeData?.ingredients);
       setSteps(step_directions);
       setNutritions(recipeData?.nutritions);
       setDirections(recipeData?.directions);
@@ -383,18 +386,49 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
     fetchRecipeData();
   }, [recipe_id]);
 
+  useEffect(() => {
+
+    const fetchIngredientIDs = async () => {
+    const ingredientsData = await handleGetAllIngredientID();
+    const matchingIngredients = ingredientsData.filter(ingredient =>
+      ingredientsList.find(listItem =>
+        listItem.toLowerCase().includes(ingredient.name.toLowerCase())
+      )
+    );
+    // Map the matching ingredients to their IDs
+    setIngredientsList(ingredientsList);
+    const IngredientIDs = matchingIngredients.map(ingredient => ingredient.id);
+    setIngredientIDs(IngredientIDs);
+
+      };
+    fetchIngredientIDs();
+
+
+  }, [recipeName, prepTime, cookTime, ingredients, steps, nutritions, directions]);
+
   const onSubmit = async () => {
+    
+    const ingredientsData = await handleGetAllIngredientID();
+    
+    const matchingIngredients = ingredientsData.filter(ingredient =>
+      ingredientsList.find(listItem =>
+        listItem.toLowerCase().includes(ingredient.name.toLowerCase())
+      )
+    );
+    // Map the matching ingredients to their IDs
+    const IngredientIDs = matchingIngredients.map(ingredient => ingredient.id);
+    setIngredientIDs(IngredientIDs);
+
     const recipe = {
       recipe_name: recipeName,
       prep_time: prepTime,
       cook_time: cookTime,
       ingredients_list: ingredientsList,
+      ingredients: ingredientIDs,
       directions: directions,
       nutritions: nutritions,
       img_src: "",
     };
-
-    console.log(recipe);
 
     const updateRecipe = await handleUpdateRecipe(
       recipe_id,
