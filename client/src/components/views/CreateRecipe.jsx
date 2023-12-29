@@ -371,8 +371,6 @@ const CreateRecipeForm = ({ user, accessToken }) => {
     );
   }
   const onSubmit = async (user_id) => {
-
-    const result = await handleGetAllIngredientID();
     const matchingIngredients = ingredients.filter(ingredient =>
       ingredientsList.find(listItem =>
         listItem.toLowerCase().includes(ingredient.name.toLowerCase())

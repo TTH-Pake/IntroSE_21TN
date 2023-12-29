@@ -372,52 +372,53 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
       }
       const recipe_directions = recipeData.directions.split(/\.\n|\./);
       const step_directions = recipe_directions.filter((step) => step !== "");
-  
+
       setRecipeName(recipeData?.recipe_name);
       setPrepTime(recipeData?.prep_time);
       setCookTime(recipeData?.cook_time);
       setIngredientsList(recipeData?.ingredients_list);
       setIngredients(recipeData?.ingredients);
+      setIngredientIDs(recipeData?.ingredients);
       setSteps(step_directions);
       setNutritions(recipeData?.nutritions);
       setDirections(recipeData?.directions);
+  
     };
 
     fetchRecipeData();
   }, [recipe_id]);
 
   useEffect(() => {
-
     const fetchIngredientIDs = async () => {
-    const ingredientsData = await handleGetAllIngredientID();
-    const matchingIngredients = ingredientsData.filter(ingredient =>
-      ingredientsList.find(listItem =>
-        listItem.toLowerCase().includes(ingredient.name.toLowerCase())
-      )
-    );
-    // Map the matching ingredients to their IDs
-    setIngredientsList(ingredientsList);
-    const IngredientIDs = matchingIngredients.map(ingredient => ingredient.id);
-    setIngredientIDs(IngredientIDs);
+      const ingredientsData = await handleGetAllIngredientID();
+      const matchingIngredients = ingredientsData.filter((ingredient) =>
+        ingredientsList.find((listItem) =>
+          listItem.toLowerCase().includes(ingredient.name.toLowerCase())
+        )
+      );
+      // Map the matching ingredients to their IDs
 
-      };
+      const IngredientIDs = matchingIngredients.map(
+        (ingredient) => ingredient.id
+      );
+      setIngredientIDs(IngredientIDs);
+    };
     fetchIngredientIDs();
+  }, [
+    recipeName,
+    prepTime,
+    cookTime,
+    ingredients,
+    ingredientsList,
+    steps,
+    nutritions,
+    directions,
+  ]);
 
 
-  }, [recipeName, prepTime, cookTime, ingredients, steps, nutritions, directions]);
-
+  
   const onSubmit = async () => {
-    
-    const ingredientsData = await handleGetAllIngredientID();
-    
-    const matchingIngredients = ingredientsData.filter(ingredient =>
-      ingredientsList.find(listItem =>
-        listItem.toLowerCase().includes(ingredient.name.toLowerCase())
-      )
-    );
-    // Map the matching ingredients to their IDs
-    const IngredientIDs = matchingIngredients.map(ingredient => ingredient.id);
-    setIngredientIDs(IngredientIDs);
+
 
     const recipe = {
       recipe_name: recipeName,
@@ -425,7 +426,7 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
       cook_time: cookTime,
       ingredients_list: ingredientsList,
       ingredients: ingredientIDs,
-      directions: directions,
+      directions: steps.join(".\n"),
       nutritions: nutritions,
       img_src: "",
     };
@@ -435,7 +436,6 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
       recipe,
       accessToken
     );
-    console.log(updateRecipe);
 
     if (updateRecipe) {
       notify_success("Update recipe successfully!");
