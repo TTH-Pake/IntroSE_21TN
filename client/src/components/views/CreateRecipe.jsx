@@ -1,19 +1,20 @@
-import{ useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
+import NavBar from "../modules/Navbar";
+import Footer from "../modules/Footer";
+import { handleCreateRecipe } from "../../action/recipesAction";
+import cookingICon from "../../assets/cooking.png";
+import cookingBookICon from "../../assets/cook-book.png";
+import deleteICon from "../../assets/trash_can.svg";
+import { checkAuth } from "../../action/accountAction";
+import { notify_fail, notify_success, Toast_Container } from "../../toast";
 import { message } from "antd";
 import { useCookies } from "react-cookie";
 import { checkAuth } from "../../action/accountAction";
 import { handleGetAllIngredientID } from "../../action/ingredientAction";
 import { handleCreateRecipe } from "../../action/recipesAction";
 import { handleGetCurrentUser } from "../../action/userAction";
-import cookingBookICon from "../../assets/cook-book.png";
-import cookingICon from "../../assets/cooking.png";
-import deleteICon from "../../assets/trash_can.svg";
-import {notify_fail, notify_success, Toast_Container } from "../../toast";
-import Footer from "../modules/Footer";
-import NavBar from "../modules/Navbar";
-import Loading from "../modules/Loading";
 
 const Ingredient = ({
   index,
@@ -341,46 +342,7 @@ const CreateRecipeForm = ({ user, accessToken }) => {
   const [nutritions, setNutritions] = useState([]); // ["Fat 10g  20%", "Protein 20g  40%", ...
   const navigate = useNavigate();
 
-  let Ingredients = [];
-
-  useEffect(() => {
-    const fetchIngredients = async () => {
-      const result = await handleGetAllIngredientID();
-      setIngredients(result);
-    };
-  
-    fetchIngredients();
-    const matchingIngredients = ingredients.filter(ingredient =>
-      ingredientsList.find(listItem =>
-        listItem.toLowerCase().includes(ingredient.name.toLowerCase())
-      )
-    );
-    // Map the matching ingredients to their IDs
-    Ingredients = matchingIngredients.map(ingredient => ingredient.id);
-
-    setIngredientIDs(Ingredients);
-
-  }, [ingredientsList]);
-  
-
-  if (!ingredients || !ingredientsList) {
-    return (
-      <div className="absolute top-1/2 left-1/2">
-        <Loading />;
-      </div>
-    );
-  }
   const onSubmit = async (user_id) => {
-    const matchingIngredients = ingredients.filter(ingredient =>
-      ingredientsList.find(listItem =>
-        listItem.toLowerCase().includes(ingredient.name.toLowerCase())
-      )
-    );
-    // Map the matching ingredients to their IDs
-    Ingredients = matchingIngredients.map(ingredient => ingredient.id);
-
-    setIngredientIDs(Ingredients);
-
     const recipe = {
       recipe_name: recipeName,
       prep_time: prepTime,
@@ -436,7 +398,7 @@ export default function CreateRecipe() {
       const user = await handleGetCurrentUser(cookies.accessToken);
       setUser(user);
     };
-    if (!checkAuth(cookies.accessToken)) {
+    if (!cookies.accessToken) {
       navigate("/login", { state: { from: location } }); // Chuyển hướng người dùng đến trang đăng nhập
       message.error("Please login to create recipe!");
     } else {

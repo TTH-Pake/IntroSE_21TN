@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const session = require("express-session");
-const passportSetup = require("./passport");
+const passportSetup = require("./config/passport/passport.js");
 const passport = require("passport");
 
 const mongoose = require("mongoose");
@@ -15,7 +15,8 @@ const recipesRouter = require("./routes/recipes");
 const ingredientRouter = require("./routes/ingredient.js");
 const commentRouter = require("./routes/comment.js");
 const blogRouter = require("./routes/blog.js");
-const authRouter = require("./routes/auth.js");
+const oauthRouter = require("./routes/oauth.js");
+// const authRouter = require("./routes/auth.js");
 
 const chatbotRouter = require("./routes/chatbot.js");
 const db = require("./db/index");
@@ -38,12 +39,13 @@ app.use(passport.session());
 
 app.use("/blog", blogRouter);
 app.use("/chatbot", chatbotRouter);
-app.use("/", accountRouter);
+app.use("/account", accountRouter);
 app.use("/", recipesRouter);
 app.use("/users", userRouter);
 app.use("/ingredients", ingredientRouter);
 app.use("/comment", commentRouter);
-app.use("/auth", authRouter);
+app.use("/oauth", oauthRouter);
+// app.use("/auth", authRouter);
 db.on("error", (stream) => {
   console.log("mongodb error");
 });

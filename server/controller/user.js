@@ -371,6 +371,7 @@ const editRecipeControl = async (req, res) => {
       ingredients,
     } = req.body;
 
+    console.log(ingredients);
     
     if (recipe_name) {
       recipe.recipe_name = recipe_name;
