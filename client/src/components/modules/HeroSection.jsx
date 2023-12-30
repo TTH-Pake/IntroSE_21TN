@@ -43,10 +43,10 @@ const HeroSection = () => {
                                 {isHovered && (
                                     <>
                                         <h1 className="text-7xl font-bold text-orange-600 hover:scale-105 transition transform duration-300 ease-in-out mb-1 mr-10">
-                                            Đổi gió bữa sáng
+                                            LOVE COOKING
                                         </h1>
                                         <h2 className="text-4xl font-semibold hover:scale-105 transition transform duration-300 ease-in-out">
-                                            NẤU NƯỚNG DỄ DÀNG
+                                            LOVE YOU
                                         </h2>
                                     </>
                                 )}

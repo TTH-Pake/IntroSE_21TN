@@ -21,7 +21,6 @@ import CommentInput from "../modules/CommentInput.jsx";
 import { Bookmark, Clock, SendIcon, Share, chatIcon } from "../../assets";
 import "./Profile.css";
 
-import { checkAuth } from "../../action/accountAction";
 import { Toast_Container, notify_success } from "../../toast";
 import { handleGetCurrentUser } from "../../action/userAction.js";
 
@@ -96,9 +95,7 @@ export const RecipeDetail = () => {
 
   const handleUpdateFavoriteRecipes = async () => {
     try {
-      const accessToken = checkAuth(cookies.accessToken);
-
-      if (!accessToken) {
+      if (!cookies.accessToken) {
         message.error("Please login to save recipes!");
         navigate("/login", { state: { from: location } }); // Chuyển hướng người dùng đến trang đăng nhập
         return;

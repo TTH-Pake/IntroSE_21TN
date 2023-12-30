@@ -11,6 +11,9 @@ import { checkAuth } from "../../action/accountAction";
 import { notify_fail, notify_success, Toast_Container } from "../../toast";
 import { message } from "antd";
 import { useCookies } from "react-cookie";
+import { checkAuth } from "../../action/accountAction";
+import { handleGetAllIngredientID } from "../../action/ingredientAction";
+import { handleCreateRecipe } from "../../action/recipesAction";
 import { handleGetCurrentUser } from "../../action/userAction";
 
 const Ingredient = ({
@@ -332,8 +335,9 @@ const CreateRecipeForm = ({ user, accessToken }) => {
   const [recipeName, setRecipeName] = useState("");
   const [prepTime, setPrepTime] = useState("");
   const [cookTime, setCookTime] = useState("");
-  // const [ingredients, setIngredients] = useState([]); // [1, 2, ...]
   const [ingredientsList, setIngredientsList] = useState([]); // ["100g flour", "100ml water" ...
+  const [ingredients, setIngredients] = useState([]);
+  const [ingredientIDs, setIngredientIDs] = useState([]); // [1, 2, 3, ...
   const [steps, setSteps] = useState([]);
   const [nutritions, setNutritions] = useState([]); // ["Fat 10g  20%", "Protein 20g  40%", ...
   const navigate = useNavigate();
@@ -344,6 +348,7 @@ const CreateRecipeForm = ({ user, accessToken }) => {
       prep_time: prepTime,
       cook_time: cookTime,
       ingredients_list: ingredientsList,
+      ingredients: Ingredients,
       steps: steps,
       nutritions: [],
       author: user_id,
@@ -393,7 +398,7 @@ export default function CreateRecipe() {
       const user = await handleGetCurrentUser(cookies.accessToken);
       setUser(user);
     };
-    if (!checkAuth(cookies.accessToken)) {
+    if (!cookies.accessToken) {
       navigate("/login", { state: { from: location } }); // Chuyển hướng người dùng đến trang đăng nhập
       message.error("Please login to create recipe!");
     } else {

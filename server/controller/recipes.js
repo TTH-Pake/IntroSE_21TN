@@ -110,6 +110,7 @@ const postRecipeControl = async (req, res) => {
       img_src,
       cook_time,
       prep_time,
+      ingredients,
     } = recipe;
 
     const user = await User.findOne({ account: req.userid }).populate(
@@ -133,6 +134,7 @@ const postRecipeControl = async (req, res) => {
       recipe_name: recipe_name,
       nutrition: nutrition,
       ingredients_list: ingredients_list,
+      ingredients: ingredients,
       tagname: tagname,
       cook_time: cook_time,
       prep_time: prep_time,

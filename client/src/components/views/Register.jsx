@@ -24,12 +24,12 @@ export default function Register() {
       password: password,
     };
     if (email === "" || password === "" || name === "") {
-      message.warning("Vui lòng điền đầy đủ thông tin");
+      message.warning("Please fill all the fields!");
       return;
     }
 
     if (password.length < 6) {
-      message.warning("Mật khẩu phải có ít nhất 6 kí tự");
+      message.warning("Password must be at least 6 characters!");
       return;
     }
 
@@ -61,7 +61,7 @@ export default function Register() {
                 setName(e.target.value);
               }}
               className="border px-3 py-2 rounded-5 focus:outline-none focus:ring-2 focus:ring-cyan-300 w-[100%] bg-white text-center"
-              placeholder="Nhập ở đây..."
+              placeholder="Insert here..."
             />
             <div className="bg-green-300 text-black text-lg font-semibold text-left p-2 px-4 my-1 mx-auto w-[max-content]">
               Your email
@@ -73,7 +73,7 @@ export default function Register() {
                 setEmail(e.target.value);
               }}
               className="border px-3 py-2 rounded-5 focus:outline-none focus:ring-2 focus:ring-cyan-300 w-[100%] bg-white text-center"
-              placeholder="Nhập ở đây..."
+              placeholder="Insert here..."
             />
             <div className="bg-green-300 text-black text-lg font-semibold text-left p-2 px-4 my-1 mx-auto w-[max-content]">
               Password
@@ -85,10 +85,10 @@ export default function Register() {
                 setPassword(e.target.value);
               }}
               className="border px-3 py-2 rounded-5 focus:outline-none focus:ring-2 focus:ring-cyan-300 w-full text-center"
-              placeholder="Mật khẩu chứa ít nhất 6 kí tự và có chữ số"
+              placeholder="Insert here..."
             />
             <button className="btn w-[50%] py-2 rounded-full mt-4 text-black text-base text-center cursor-pointer mx-auto bg-red-400 hover:bg-red-500 hover:font-semibold hover:shadow-lg transition duration-300">
-              Regsister
+              Register
             </button>
           </form>
         </div>

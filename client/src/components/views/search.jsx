@@ -11,7 +11,6 @@ import Avatar from "../modules/Avatar";
 import loupe from "/src/assets/loupe.png";
 import commentIcon from "/src/assets/chat.png";
 import likeIcon from "/src/assets/heart.png";
-import Menu from "../modules/Menu";
 
 const initialRecipesToShow = 10;
 
@@ -155,11 +154,6 @@ const Search = () => {
             showLoginForm={showLoginForm}
             setShowLoginForm={setShowLoginForm}
             onClick={handleAvatarClick}
-          />
-          <Menu
-            showMenu={showMenu}
-            setShowMenu={setShowMenu}
-            onClick={handleMenuClick}
           />
         </div>
       </nav>
