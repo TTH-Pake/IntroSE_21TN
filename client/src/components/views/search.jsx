@@ -11,6 +11,8 @@ import Avatar from "../modules/Avatar";
 import loupe from "/src/assets/loupe.png";
 import commentIcon from "/src/assets/chat.png";
 import likeIcon from "/src/assets/heart.png";
+import Menu from "../modules/Menu";
+import NavBar from "../modules/Navbar";
 
 const initialRecipesToShow = 10;
 
@@ -121,42 +123,7 @@ const Search = () => {
 
   return (
     <div className="container border-t mx-auto">
-      <nav className="navbar flex flex-col relative items-center justify-center align-middle px-6 h-[80px] bg-white border-b">
-        <Link to="/home">
-          <LogoIcon className="flex-shrink-0" />
-        </Link>
-
-        <div className="relative w-1/2 rounded-lg">
-          <form onSubmit={handleSearch}>
-            <input
-              className="search-input w-full px-4 py-2 border bg-green-500 outline-none placeholder-gray-700 pl-10"
-              style={{ borderRadius: "12px" }}
-              type="text"
-              placeholder="Tìm kiếm công thức..."
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-            />
-
-            <button
-              onClick={handleSearch}
-              type="submit"
-              className="absolute top-1/2 right-3 transform -translate-y-1/2"
-            >
-              <img src={loupe} alt="Search" className="w-4 h-4" />
-            </button>
-          </form>
-        </div>
-
-        <div className="flex-shrink-0 flex items-center space-x-10 bg-white">
-          <Avatar
-            showLoginForm={showLoginForm}
-            setShowLoginForm={setShowLoginForm}
-            onClick={handleAvatarClick}
-          />
-        </div>
-      </nav>
+      <NavBar />
 
       <div className="flex">
         <div className="px-3 w-1/4 p-7 mr-2">
