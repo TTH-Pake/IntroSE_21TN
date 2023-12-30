@@ -28,9 +28,9 @@ export default function OTPConfirm() {
       otp: otp,
     };
 
-    // if (handleResetPassword(user)) {
+
     navigate("/login");
-    // }
+    
   };
 
   useEffect(() => {
