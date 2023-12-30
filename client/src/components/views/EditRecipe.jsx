@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { message } from "antd";
 import { useCookies } from "react-cookie";
-import { checkAuth } from "../../action/accountAction";
 import { handleGetAllIngredientID } from "../../action/ingredientAction";
 import { handleSearchRecipesID } from "../../action/recipesAction";
 import {
