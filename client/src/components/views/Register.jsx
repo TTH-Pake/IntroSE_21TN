@@ -34,7 +34,8 @@ export default function Register() {
     }
 
     if (handleRegister(userData)) {
-      navigate("/login");
+      navigate("/confirm-otp");
+      // navigate("/login");
     }
   };
 

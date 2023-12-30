@@ -8,10 +8,6 @@ export default function OTPConfirm() {
   const [otp, setOTP] = useState("");
   const [countdown, setCountdown] = useState(60);
   const [isCounting, setIsCounting] = useState(true);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const action = queryParams.get("action");
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -32,9 +28,9 @@ export default function OTPConfirm() {
       otp: otp,
     };
 
-    if (handleResetPassword(user)) {
-      navigate("/login");
-    }
+    // if (handleResetPassword(user)) {
+    navigate("/login");
+    // }
   };
 
   useEffect(() => {

@@ -39,7 +39,7 @@ export const handleRegister = async (userData) => {
       userData
     );
     if (result.data.success == true) {
-      message.success("Register successful!");
+      message.success("Please check your email!");
       return true;
     } else {
       message.error(result.data.error);
@@ -58,7 +58,7 @@ export const handleResetPassword = async (userData) => {
       userData
     );
     if (result.data.success == true) {
-      message.success("Reset password successful!");
+      message.success("Please check your email!");
       return true;
     } else {
       message.error(result.data.error);

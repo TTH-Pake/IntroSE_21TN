@@ -39,7 +39,8 @@ export default function ResetPassword() {
     };
 
     if (handleResetPassword(user)) {
-      navigate("/login");
+      navigate("/confirm-otp");
+      // navigate("/login");
     }
   };
 

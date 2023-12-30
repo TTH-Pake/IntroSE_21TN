@@ -1,20 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import NavBar from "../modules/Navbar";
-import Footer from "../modules/Footer";
-import { handleCreateRecipe } from "../../action/recipesAction";
-import cookingICon from "../../assets/cooking.png";
-import cookingBookICon from "../../assets/cook-book.png";
-import deleteICon from "../../assets/trash_can.svg";
-import { checkAuth } from "../../action/accountAction";
-import { notify_fail, notify_success, Toast_Container } from "../../toast";
 import { message } from "antd";
 import { useCookies } from "react-cookie";
-import { checkAuth } from "../../action/accountAction";
-import { handleGetAllIngredientID } from "../../action/ingredientAction";
 import { handleCreateRecipe } from "../../action/recipesAction";
 import { handleGetCurrentUser } from "../../action/userAction";
+import cookingBookICon from "../../assets/cook-book.png";
+import cookingICon from "../../assets/cooking.png";
+import deleteICon from "../../assets/trash_can.svg";
+import { notify_fail, notify_success, Toast_Container } from "../../toast";
+import Footer from "../modules/Footer";
+import NavBar from "../modules/Navbar";
 
 const Ingredient = ({
   index,
