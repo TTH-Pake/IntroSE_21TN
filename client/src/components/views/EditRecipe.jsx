@@ -371,7 +371,7 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
       }
       const recipe_directions = recipeData.directions.split(/\.\n|\./);
       const step_directions = recipe_directions.filter((step) => step !== "");
-  
+
       setRecipeName(recipeData?.recipe_name);
       setPrepTime(recipeData?.prep_time);
       setCookTime(recipeData?.cook_time);
@@ -380,43 +380,49 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
       setSteps(step_directions);
       setNutritions(recipeData?.nutritions);
       setDirections(recipeData?.directions);
-  
     };
 
     fetchRecipeData();
   }, [recipe_id]);
 
   useEffect(() => {
-
     const fetchIngredientIDs = async () => {
-    const ingredientsData = await handleGetAllIngredientID();
-    const matchingIngredients = ingredientsData.filter(ingredient =>
-      ingredientsList.find(listItem =>
-        listItem.toLowerCase().includes(ingredient.name.toLowerCase())
-      )
-    );
-    // Map the matching ingredients to their IDs
-    setIngredientsList(ingredientsList);
-    const IngredientIDs = matchingIngredients.map(ingredient => ingredient.id);
-    setIngredientIDs(IngredientIDs);
-
-      };
+      const ingredientsData = await handleGetAllIngredientID();
+      const matchingIngredients = ingredientsData.filter((ingredient) =>
+        ingredientsList.find((listItem) =>
+          listItem.toLowerCase().includes(ingredient.name.toLowerCase())
+        )
+      );
+      // Map the matching ingredients to their IDs
+      setIngredientsList(ingredientsList);
+      const IngredientIDs = matchingIngredients.map(
+        (ingredient) => ingredient.id
+      );
+      setIngredientIDs(IngredientIDs);
+    };
     fetchIngredientIDs();
-
-
-  }, [recipeName, prepTime, cookTime, ingredients, steps, nutritions, directions]);
+  }, [
+    recipeName,
+    prepTime,
+    cookTime,
+    ingredients,
+    steps,
+    nutritions,
+    directions,
+  ]);
 
   const onSubmit = async () => {
-    
     const ingredientsData = await handleGetAllIngredientID();
-    
-    const matchingIngredients = ingredientsData.filter(ingredient =>
-      ingredientsList.find(listItem =>
+
+    const matchingIngredients = ingredientsData.filter((ingredient) =>
+      ingredientsList.find((listItem) =>
         listItem.toLowerCase().includes(ingredient.name.toLowerCase())
       )
     );
     // Map the matching ingredients to their IDs
-    const IngredientIDs = matchingIngredients.map(ingredient => ingredient.id);
+    const IngredientIDs = matchingIngredients.map(
+      (ingredient) => ingredient.id
+    );
     setIngredientIDs(IngredientIDs);
 
     const recipe = {
@@ -478,6 +484,12 @@ export default function UpdateRecipe() {
       const user = await handleGetCurrentUser(cookies.accessToken);
       setUser(user);
     };
+    if (!cookies.accessToken) {
+      navigate("/login", { state: { from: location } }); // Chuyển hướng người dùng đến trang đăng nhập
+      message.error("Please login to create recipe!");
+    } else {
+      getUser();
+    }
   }, [cookies.accessToken]);
 
   return (

@@ -13,6 +13,7 @@ import commentIcon from "/src/assets/chat.png";
 import likeIcon from "/src/assets/heart.png";
 import Menu from "../modules/Menu";
 import NavBar from "../modules/Navbar";
+
 const initialRecipesToShow = 10;
 
 const Search = () => {
