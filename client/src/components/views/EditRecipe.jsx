@@ -478,12 +478,6 @@ export default function UpdateRecipe() {
       const user = await handleGetCurrentUser(cookies.accessToken);
       setUser(user);
     };
-    if (!checkAuth(cookies.accessToken)) {
-      navigate("/login", { state: { from: location } }); // Chuyển hướng người dùng đến trang đăng nhập
-      message.error("Please login to create recipe!");
-    } else {
-      getUser();
-    }
   }, [cookies.accessToken]);
 
   return (

@@ -50,6 +50,7 @@ const BlogManager = () => {
     );
   }
 
+
   const handleDeletePost = (deletedPostId) => {
     setBlogPosts((prevPosts) =>
       prevPosts.filter((post) => post.id !== deletedPostId)
