@@ -1,6 +1,7 @@
 import NavBar from "../modules/Navbar";
 import Namdua from "../../assets/5dua.jpg";
 import Footer from "../modules/Footer";
+import { MNhat,TTHiep,FITHCMUS } from "../../assets";
 
 const AboutUs = () => {
   return (
@@ -15,7 +16,7 @@ const AboutUs = () => {
       <div
         className="w-full h-50 mx-0 bg-no-repeat bg-center"
         style={{
-          backgroundImage: `url(${Namdua})`,
+          backgroundImage: `url(${FITHCMUS})`,
         }}
       ></div>
 
@@ -28,7 +29,7 @@ const AboutUs = () => {
           <div className="col-md-4 font-semibold mb-10">
             <div className="member-card flex flex-col items-center">
               <img
-                src={Namdua}
+                src={TTHiep}
                 alt="Member 1"
                 className="w-100 h-100 rounded-full transform transition-transform hover:scale-105"
               />
@@ -38,7 +39,7 @@ const AboutUs = () => {
           <div className="col-md-4 font-semibold mb-10">
             <div className="member-card flex flex-col items-center">
               <img
-                src={Namdua}
+                src={MNhat}
                 alt="Member 2"
                 className="w-100 h-100 rounded-full transform transition-transform hover:scale-105"
               />

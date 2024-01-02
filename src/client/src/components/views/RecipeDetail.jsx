@@ -40,7 +40,11 @@ export const RecipeDetail = () => {
 
   const handleRatingChange = (rating) => {
     setUserRating(rating);
-    recipe.rating = parseFloat(((recipe.rating * 2 + rating) / 3).toFixed(1));
+    if(recipe.rating === 0){
+      recipe.rating = rating;
+    }
+
+    recipe.rating = parseFloat(((recipe.rating + rating*2) / 3).toFixed(1));
   };
 
   const fetchComments = async () => {
