@@ -11,6 +11,7 @@ import Footer from "../modules/Footer";
 import Loading from "../modules/Loading";
 import NavBar from "../modules/Navbar.jsx";
 import RelatedRecipes from "../modules/RelatedRecipes.jsx";
+import Rating from "../modules/Rating.jsx";
 
 import { message } from "antd";
 import axios from "axios";
@@ -35,6 +36,12 @@ export const RecipeDetail = () => {
   const [user, setUser] = React.useState(null);
   const [comments, setComments] = React.useState([]);
   const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+  const [userRating, setUserRating] = React.useState(0);
+
+  const handleRatingChange = (rating) => {
+    setUserRating(rating);
+    recipe.rating = parseFloat(((recipe.rating * 2 + rating) / 3).toFixed(1));
+  };
 
   const fetchComments = async () => {
     try {
@@ -223,10 +230,9 @@ export const RecipeDetail = () => {
 
               <Toast_Container />
 
-              <button className="text-gray-900 p-1 rounded-md border border-black bg-white flex items-center justify-center space-x-2">
-                <img src={Share} alt="Share Icon" className="h-4 w-4" />
-                <span>Share</span>
-              </button>
+              <div>
+                <Rating onRate={handleRatingChange} />
+              </div>
             </div>
 
             <div className="w-full bg-white rounded-md py-2 mt-4 shadow-lg">

@@ -17,7 +17,7 @@ const Others = () => {
          
           <button
             className="bg-yellow-300 hover:bg-yellow-400 text-black py-3 px-48 rounded-full"
-            onClick={() => handleNavigate('/change-password')}
+            onClick={() => handleNavigate('/reset-password')}
           >
             Change password
           </button>
