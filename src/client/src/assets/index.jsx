@@ -20,3 +20,6 @@ import FITHCMUS from "./fithcmus.png";
 import avatar from "./img_login.png";
 export {avatar,FITHCMUS, Clock, chatIcon, avatarIcon, SendIcon, Bookmark, Share,ProfileIcon,
 NotiIcon,KeyIcon,EditIcon,RecipeIcon,BlogIcon,FavoriteIcon,fbIcon,instaIcon,twIcon,MNhat,TTHiep}
+
+export { Clock, chatIcon, avatarIcon, SendIcon, Bookmark, Share,ProfileIcon,
+NotiIcon,KeyIcon,EditIcon,RecipeIcon,BlogIcon,FavoriteIcon,fbIcon,instaIcon,twIcon}
