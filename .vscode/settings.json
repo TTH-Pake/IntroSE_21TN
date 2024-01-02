@@ -1,5 +1,0 @@
-{
-    "prettier.bracketSameLine": false,
-    "prettier.withNodeModules": true,
-    "files.autoSave": "onWindowChange"
-}
