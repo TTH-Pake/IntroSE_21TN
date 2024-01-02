@@ -1,10 +1,5 @@
 import axios from "axios";
 import { message } from "antd";
-// import {
-//   auth,
-//   googleprovider,
-// } from "../components/Firebase/firebase.initialize";
-// import { signInWithPopup, signOut } from "firebase/auth";
 
 //Login
 export const handleLogin = async (userData, setCookie) => {
@@ -69,73 +64,29 @@ export const handleResetPassword = async (userData) => {
   return false;
 };
 
-// try {
-//   const result = await axios.get("http://127.0.0.1:8000/auth/login/success", {
-//     withCredentials: true,
-//   });
-//   console.log(result);
-// } catch (err) {
-//   console.log(err);
-// }
-// login with google
-// export const handleLoginWithGoogle = async () => {
-//   try {
-//     const data = await signInWithPopup(auth, googleprovider);
-//     console.log("result user: ", data.user);
-//     const { displayName, email, metadata, photoURL } = data.user;
-//     const loggedInUser = {
-//       name: displayName,
-//       email: email,
-//       image: photoURL,
-//       lastLoginTime: metadata.lastSignInTime,
-//     };
-// login with google
-export const handleLoginWithGoogle1 = async () => {
-  window.open("http://127.0.0.1:8000/auth/google", "_self");
-  const result = await axios
-    .get("http://127.0.0.1:8000/auth/login/success", {
-      withCredentials: true,
-    })
-    .then((res) => {
-      console.log(res);
-      return true;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+
+export const handleLoginWithGoogle = async () => {
+  const respone = await axios.get("http://127.0.0.1:8000/auth/google");
+  console.log(respone.data);
+
+  // Wait for user to complete Google login before making GET request
+  window.addEventListener('focus', handleGetAccessToken, { once: true });
 };
 
-// export const handleLoginWithGoogle = async () => {
-//   try {
-//     const data = await signInWithPopup(auth, googleprovider);
-//     const { displayName, email, metadata, photoURL } = data.user;
-//     const loggedInUser = {
-//       name: displayName,
-//       email: email,
-//       image: photoURL,
-//       lastLoginTime: metadata.lastSignInTime,
-//     };
+export const handleGetAccessToken = async () => {
+  try {
+    const result = await axios.get("http://127.0.0.1:8000/auth/login/success", {
+      withCredentials: true,
+    });
 
-//     const result = await axios.post(
-//       "http://127.0.0.1:8000/account/google/login",
-//       loggedInUser
-//     );
-
-//     return true;
-//   } catch (error) {
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//     console.log(error);
-//     // The email of the user's account used.
-//     const errorCollection = {
-//       errorCode,
-//       errorMessage,
-//     };
-//     // eslint-disable-next-line no-undef
-//     setError(errorCollection);
-//   }
-//   return false;
-// };
+    console.log("result",result);
+    if(result.data.success === true){
+      return result.data.accessToken;
+    }
+  } catch (error) {
+    console.error("Error getting access token:", error);
+  }
+};
 
 export const handleLogout = (removeCookie) => {
   removeCookie("accessToken", { path: "/" });

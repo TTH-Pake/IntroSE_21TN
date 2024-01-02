@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000/";
 
 router.get("/login/success", (req, res) => {
-  console.log("req user: ", req.user);
+  
   if (req.user) {
     const accessToken = jwt.sign(
       { userid: req.user._id },
