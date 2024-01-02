@@ -164,16 +164,14 @@ const Profile = () => {
                     {userProfile.name}
                   </h2>
                   <div className="flex justify-center items-center space-x-4">
-                    <p className="text-gray-600">\follower\</p>
-                    <p className="text-gray-600">\following\</p>
+                    <p className="text-gray-600">{userProfile.followers}</p>
                   </div>
-                  <p className="text-gray-600">\address\</p>
-                  <p className="text-gray-600">{userProfile.account.email}</p>
-                  <p className="text-gray-600">+84 {userProfile.phone}</p>
-
-                  <button className="mt-4 bg-blue-300 text-gray-800 rounded-full hover:font-semibold hover:bg-blue-400 px-4 py-1.5 w-full sm:w-auto">
-                    Verify account
-                  </button>
+                  <p className="text-gray-600">
+                    Email : {userProfile.account.email}
+                  </p>
+                  <p className="text-gray-600">
+                    Telephone : +84 {userProfile.phone}
+                  </p>
                 </div>
 
                 <div className="flex justify-center border-none pt-2">

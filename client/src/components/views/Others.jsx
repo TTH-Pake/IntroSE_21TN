@@ -14,17 +14,12 @@ const Others = () => {
       <NavBar />
       <div className="flex-grow flex items-center justify-center bg-white">
         <div className="text-center font-semibold flex flex-col gap-4">
+         
           <button
             className="bg-yellow-300 hover:bg-yellow-400 text-black py-3 px-48 rounded-full"
-          // onClick={() => handleNavigate('/register-vip')}
+            onClick={() => handleNavigate('/change-password')}
           >
-            Đăng kí VIP
-          </button>
-          <button
-            className="bg-yellow-300 hover:bg-yellow-400 text-black py-3 px-48 rounded-full"
-          // onClick={() => handleNavigate('/change-password')}
-          >
-            Đổi mật khẩu
+            Change password
           </button>
           <button
             className="bg-yellow-300 hover:bg-yellow-400 text-black py-3 px-48 rounded-full"
@@ -37,7 +32,7 @@ const Others = () => {
             className="bg-yellow-300 hover:bg-yellow-400 text-black py-3 px-48 rounded-full"
             onClick={() => handleNavigate('/feedback')}
           >
-            Góp ý
+            Feed back
           </button>
         </div>
       </div>
