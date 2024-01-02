@@ -163,9 +163,15 @@ const Profile = () => {
                   <h2 className="text-2xl leading-9 font-bold text-gray-900">
                     {userProfile.name}
                   </h2>
+<<<<<<< HEAD:src/client/src/components/views/Profile.jsx
                   
                   <p className="text-gray-600">Followers: {userProfile.followers.length}</p>
                  
+=======
+                  <div className="flex justify-center items-center space-x-4">
+                    <p className="text-gray-600">{userProfile.followers}</p>
+                  </div>
+>>>>>>> b1f58edcbf69b7a596c5678e9432b2bd261fdd9f:client/src/components/views/Profile.jsx
                   <p className="text-gray-600">
                     Email : {userProfile.account.email}
                   </p>
