@@ -290,10 +290,10 @@ const Admin = () => {
                     {user.account
                       ? user.account.email
                       : user.google_id
-                      ? "Google Account"
-                      : user.facebook_id
-                      ? "Facebook Account"
-                      : "Cant find email"}
+                        ? "Google Account"
+                        : user.facebook_id
+                          ? "Facebook Account"
+                          : "Cant find email"}
                   </td>
                   <td className="p-2">{user.gender}</td>
                   <td className="p-2">{user.age}</td>
