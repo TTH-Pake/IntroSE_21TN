@@ -41,9 +41,10 @@ export default function Login() {
     }
   };
 
-  const onLoginWithGoogle = async () => {
-    const isLoggedIn = await handleLoginWithGoogle();
 
+  const onLoginWithGoogle = async () => {
+    
+    const isLoggedIn = await handleLoginWithGoogle();
     if (isLoggedIn) {
       navigate(location.state?.from || "/home");
     }

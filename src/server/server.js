@@ -16,7 +16,7 @@ const recipesRouter = require("./routes/recipes");
 const ingredientRouter = require("./routes/ingredient.js");
 const commentRouter = require("./routes/comment.js");
 const blogRouter = require("./routes/blog.js");
-const authRouter = require("./routes/auth.js");
+const oauthRouter = require("./routes/oauth.js");
 // const authRouter = require("./routes/auth.js");
 
 const chatbotRouter = require("./routes/chatbot.js");
@@ -24,11 +24,7 @@ const db = require("./db/index");
 
 const app = express();
 app.use(express.json());
-app.use(
-  cors({
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
@@ -49,7 +45,8 @@ app.use("/", recipesRouter);
 app.use("/users", userRouter);
 app.use("/ingredients", ingredientRouter);
 app.use("/comment", commentRouter);
-app.use("/", authRouter);
+app.use("/oauth", oauthRouter);
+// app.use("/auth", authRouter);
 db.on("error", (stream) => {
   console.log("mongodb error");
 });
