@@ -135,7 +135,7 @@ const Admin = () => {
   };
 
   const handleDeleteUser = (userId) => {
-    console.log(`Xóa người dùng với ID: ${userId}`);
+    console.log(`Delete user with user id :  ${userId}`);
   };
 
   return (

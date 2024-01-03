@@ -123,12 +123,7 @@ const registerWithVerificationControl = async (req, res) => {
         await account.save();
         await user.save();
         await token.save();
-        console.log("account mail: ", token.email, " code: ", token.code);
-
-        // WARNING: This is not a good way to generate a verification code.
-        // This is the verification code.
-        // const verificationCode = Math.floor(100000 + Math.random() * 900000);
-        // let link = "http://127.0.0.1:8000/account/verify/" + token.code;
+        
         let isSentSuccessfully = await sendMail(
           email,
           "Verify your account",
@@ -208,7 +203,6 @@ const forgotPasswordControl = async (req, res) => {
         code: verificationCode,
       });
       await token.save();
-      console.log("account mail: ", token.email, " code: ", token.code);
 
       const isSentSuccessfully = await sendMail(
         email,
@@ -232,7 +226,6 @@ const forgotPasswordControl = async (req, res) => {
 const verifyForgotPasswordControl = async (req, res) => {
   try {
     const token = await Token.findOne({ code: req.params.code });
-    console.log("forgot token: ", token);
     await Account.findOne({
       email: token.email,
       google_id: null,

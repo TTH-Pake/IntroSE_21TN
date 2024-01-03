@@ -344,7 +344,7 @@ const CreateRecipeForm = ({ user, accessToken }) => {
       prep_time: prepTime,
       cook_time: cookTime,
       ingredients_list: ingredientsList,
-      ingredients: Ingredients,
+      ingredients: ingredients,
       steps: steps,
       nutritions: [],
       author: user_id,

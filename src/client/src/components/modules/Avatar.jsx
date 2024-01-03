@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,16 +15,16 @@ const Avatar = ({ showLoginForm, setShowLoginForm, onClick }) => {
     const accessToken = cookies.accessToken;
     if (!accessToken) {
       setUser(null);
-      console.log("if noot token");
+      
     } else {
       setUser(await handleGetCurrentUser(accessToken));
-      console.log("else token user: ", user);
+      
     }
   };
 
   useEffect(() => {
     getUser();
-    console.log("Avatar: useEffect", user);
+   
   }, [cookies.accessToken]);
 
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const Avatar = ({ showLoginForm, setShowLoginForm, onClick }) => {
   };
 
   const navigateToLogin = () => {
-    // setShowLoginForm(true);
+    
     handleLogout(removeCookie);
     navigate("/login");
   };

@@ -18,36 +18,15 @@ passport.use(
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
-        //   const user = await User.findOne({ google_id: profile.id });
-        //   if (user) {
-        //     return done(null, user);
-        //   }
-        //   const maxUserId = await User.estimatedDocumentCount();
 
-        //   const newUser = new User({
-        //     user_id: maxUserId + 1,
-        //     google_id: profile.id,
-        //     name: profile.displayName,
-        //     // email: profile.emails[0].value,
-        //     profile_image: profile.photos[0].value,
-        //     gender: "other",
-        //     is_admin: false,
-        //   });
-
-        //   await newUser.save();
-        //   return done(null, newUser);
-        // } catch (error) {
-        //   console.log(error);
-        //   return done(error, null);
-        // }
         const account = await Account.findOne({ google_id: profile.id });
         if (account) {
           const user = await User.findOne({ account: account._id });
           return done(null, user);
         }
-        console.log("profile: ", profile);
+        
         const maxUserId = await Account.estimatedDocumentCount();
-        console.log("maxUserId: ", maxUserId);
+       
         const newAccount = new Account({
           user_id: maxUserId + 1,
           email: profile.emails[0].value,
@@ -68,12 +47,6 @@ passport.use(
         await user.save();
         await newAccount.save();
         return done(null, user);
-
-        // account.save().then(() => {
-        //   const accessToken = jwt.sign(
-        //     { userid: account.user_id },
-        //     process.env.ACCESS_TOKEN_SECRET
-        //   );
       } catch (error) {
         console.log(error);
         return done(error, null);

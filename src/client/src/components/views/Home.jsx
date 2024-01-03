@@ -34,7 +34,7 @@ const Home = () => {
       try {
         const user = await handleGetCurrentUser(cookies.accessToken);
         setUser(user);
-        console.log("user: ", user);
+        
       } catch (err) {
         console.log(err);
       }

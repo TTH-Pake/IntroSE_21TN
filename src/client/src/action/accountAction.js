@@ -84,19 +84,6 @@ export const handleResetPassword = async (userData) => {
 // login with google
 export const handleLoginWithGoogle = async () => {
   window.open("http://127.0.0.1:8000/google", "_self");
-  // const result = await axios
-  //   .get("http://127.0.0.1:8000//auth/google/callback", {
-  //     withCredentials: true,
-  //   })
-  //   .then((res) => {
-  //     console.log("yes");
-  //     console.log(res);
-  //     return true;
-  //   })
-  //   .catch((err) => {
-  //     console.log("no");
-  //     console.log(err);
-  //   });
 };
 
 export const handleLogout = (removeCookie) => {
