@@ -424,14 +424,15 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
       (ingredient) => ingredient.id
     );
     setIngredientIDs(IngredientIDs);
-
+    
+    const Directions = steps.join(".\n");
     const recipe = {
       recipe_name: recipeName,
       prep_time: prepTime,
       cook_time: cookTime,
       ingredients_list: ingredientsList,
       ingredients: ingredientIDs,
-      directions: directions,
+      directions: Directions,
       nutritions: nutritions,
       img_src: "",
     };

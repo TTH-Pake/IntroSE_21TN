@@ -138,7 +138,7 @@ export const handleDeleteRecipes = async (recipe_id, accessToken) => {
     );
 
     // Xử lý phản hồi từ server
-    console.log(response.data);
+    
     if (response.data.success) {
       message.success("Recipe deleted successfully");
       // Cập nhật trạng thái của người dùng trong state hoặc component
@@ -166,7 +166,7 @@ export const updateUserProfile = async (
         },
       }
     );
-    console.log("Updated User in action:", response);
+  
 
     // Assuming the API response contains the updated user profile
     const updatedUserProfile = response.data;

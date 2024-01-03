@@ -39,7 +39,6 @@ const FeedBack = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Đã gửi dữ liệu:", form);
 
     setForm({
       name: "",

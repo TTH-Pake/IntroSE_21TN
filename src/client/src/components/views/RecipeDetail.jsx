@@ -39,6 +39,9 @@ export const RecipeDetail = () => {
   const [userRating, setUserRating] = React.useState(0);
 
   const handleRatingChange = (rating) => {
+    if(recipe.rating === 0) {
+      recipe.rating = rating;
+    }
     setUserRating(rating);
     recipe.rating = parseFloat(((recipe.rating * 2 + rating) / 3).toFixed(1));
   };
@@ -113,7 +116,7 @@ export const RecipeDetail = () => {
         { recipeId },
         {
           headers: {
-            Authorization: "Bearer " + accessToken,
+            Authorization: "Bearer " + cookies.accessToken,
           },
         }
       );

@@ -61,7 +61,6 @@ const Profile = () => {
     const fetchUserProfile = async () => {
       try {
         const profile = await handleGetCurrentUser(cookies.accessToken);
-        console.log("Profile:", profile);
         setUserProfile(profile);
         setEditingProfile({
           name: profile.name,
