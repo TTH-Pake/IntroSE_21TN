@@ -118,7 +118,7 @@ const getProfileControl = async (req, res) => {
 
 const getFavouriteRecipesControl = async (req, res) => {
   const user = await User.findOne({ account: req.userid });
-  
+
   if (!user) {
     return res.status(404).json({ success: false, message: "User not found" });
   }
@@ -372,16 +372,16 @@ const editRecipeControl = async (req, res) => {
     } = req.body;
 
     console.log(ingredients);
-    
+
     if (recipe_name) {
       recipe.recipe_name = recipe_name;
     }
 
-    if (prep_time){
+    if (prep_time) {
       recipe.prep_time = prep_time;
     }
 
-    if (cook_time){
+    if (cook_time) {
       recipe.cook_time = cook_time;
     }
 
@@ -391,7 +391,7 @@ const editRecipeControl = async (req, res) => {
 
     if (directions) {
       recipe.directions = directions;
-      }
+    }
     if (nutritions) {
       recipe.nutritions = nutritions;
     }
@@ -405,7 +405,6 @@ const editRecipeControl = async (req, res) => {
     }
 
     await recipe.save();
-
 
     return res
       .status(200)

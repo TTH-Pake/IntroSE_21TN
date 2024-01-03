@@ -18,10 +18,10 @@ export default function Login() {
   const location = useLocation();
 
   useEffect(() => {
-  if (cookies.accessToken) {
-    navigate(location.state?.from || "/home");
-  }
-}, []);
+    if (cookies.accessToken) {
+      navigate(location.state?.from || "/home");
+    }
+  }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();

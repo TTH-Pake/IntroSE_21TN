@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { handleResetPassword } from "../../action/accountAction";
+import {
+  handleResetPassword,
+  handleSubmitOTP,
+} from "../../action/accountAction";
 import { useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo-recipe.png";
 import { message } from "antd";
@@ -11,26 +14,30 @@ export default function OTPConfirm() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const userData = {
-      email: email,
-      password: password,
-      verifyPassword: verifyPassword,
-    };
+    // const userData = {
+    //   email: email,
+    //   password: password,
+    //   verifyPassword: verifyPassword,
+    // };
 
     if (otp === "") {
       message.error("Please enter OTP");
       return;
     }
 
-    const user = {
-      email: email,
-      password: password,
+    // const user = {
+    //   email: email,
+    //   password: password,
+    //   otp: otp,
+    // };
+
+    const data = {
       otp: otp,
     };
 
-
-    navigate("/login");
-    
+    if (handleSubmitOTP(data)) {
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
@@ -68,7 +75,6 @@ export default function OTPConfirm() {
           >
             {/* ... Existing code ... */}
             <div className="bg-green-300 text-black text-base text-center p-2 px-4 my-1 mx-auto w-[300px]">
-
               We have sent the 4-digit OTP code to your email. If you have not
               received the message, please click
               <span className="font-bold"> resend OTP</span>.
@@ -87,11 +93,7 @@ export default function OTPConfirm() {
               type="submit"
               className="btn w-[50%] py-2 rounded-full mt-4 text-black text-base text-center cursor-pointer mx-auto bg-red-400 hover:bg-red-500 hover:font-semibold hover:shadow-lg transition duration-300"
             >
-
-              Verify OTP
-
-              Change Password
-
+              Verify OTP Change Password
             </button>
 
             <div className="flex justify-center items-center mt-2">

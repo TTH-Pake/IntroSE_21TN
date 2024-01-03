@@ -10,17 +10,30 @@ const schema = new Schema({
 
   email: {
     type: String,
-    unique: true,
+    unique: false,
     required: true,
   },
 
   password: {
     type: String,
     required: true,
+    default: "123456",
   },
   is_verified: {
     type: Boolean,
     default: false,
+  },
+
+  google_id: {
+    type: String,
+    unique: true,
+    default: null,
+  },
+
+  facebook_id: {
+    type: String,
+    unique: true,
+    default: null,
   },
 
   created_time: Date,

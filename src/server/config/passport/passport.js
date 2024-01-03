@@ -2,7 +2,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const passport = require("passport");
 const User = require("../../model/userModel");
-
+const Account = require("../../model/accountModel");
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
@@ -18,13 +18,39 @@ passport.use(
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
-        const user = await User.findOne({ google_id: profile.id });
-        if (user) {
+        //   const user = await User.findOne({ google_id: profile.id });
+        //   if (user) {
+        //     return done(null, user);
+        //   }
+        //   const maxUserId = await User.estimatedDocumentCount();
+
+        //   const newUser = new User({
+        //     user_id: maxUserId + 1,
+        //     google_id: profile.id,
+        //     name: profile.displayName,
+        //     // email: profile.emails[0].value,
+        //     profile_image: profile.photos[0].value,
+        //     gender: "other",
+        //     is_admin: false,
+        //   });
+
+        //   await newUser.save();
+        //   return done(null, newUser);
+        // } catch (error) {
+        //   console.log(error);
+        //   return done(error, null);
+        // }
+        const account = await Account.findOne({ google_id: profile.id });
+        if (account) {
+          const user = await User.findOne({ account: account._id });
           return done(null, user);
         }
-        const maxUserId = await User.estimatedDocumentCount();
-        const newUser = new User({
+        console.log("profile: ", profile);
+        const maxUserId = await Account.estimatedDocumentCount();
+        console.log("maxUserId: ", maxUserId);
+        const newAccount = new Account({
           user_id: maxUserId + 1,
+          email: profile.emails[0].value,
           google_id: profile.id,
           name: profile.displayName,
           avatar: profile.photos[0].value,
@@ -33,8 +59,21 @@ passport.use(
           is_admin: false,
         });
 
-        await newUser.save();
-        return done(null, newUser);
+        const user = new User({
+          user_id: maxUserId + 1,
+          name: profile.displayName,
+          account: newAccount._id,
+        });
+
+        await user.save();
+        await newAccount.save();
+        return done(null, user);
+
+        // account.save().then(() => {
+        //   const accessToken = jwt.sign(
+        //     { userid: account.user_id },
+        //     process.env.ACCESS_TOKEN_SECRET
+        //   );
       } catch (error) {
         console.log(error);
         return done(error, null);

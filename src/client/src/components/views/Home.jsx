@@ -6,11 +6,43 @@ import Chat from "./Chat";
 import RecommendedRecipes from "../modules/RecommendedRecipes";
 import RecipeRanking from "../modules/RecipeRanking";
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { handleGetCurrentUser } from "../../action/userAction";
+
 const Home = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Get the current URL
+    if (window.location.href.includes("token")) {
+      const url = new URL(window.location.href);
 
+      // Get the 'token' query parameter
+      const accessToken = url.searchParams.get("token");
+      setCookie("accessToken", accessToken, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7, // Expires after 1week
+        sameSite: true,
+      });
+      navigate("/home");
+    }
+
+    const fetchUser = async () => {
+      try {
+        const user = await handleGetCurrentUser(cookies.accessToken);
+        setUser(user);
+        console.log("user: ", user);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (cookies.accessToken) {
+      fetchUser();
+    }
+  }, [cookies.accessToken]);
   const ButtonGroup = () => {
     return (
       <div className="button-group flex flex-rows items-center justify-between w-full p-4 space-x-20">

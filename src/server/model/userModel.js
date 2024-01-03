@@ -57,15 +57,15 @@ const schema = new Schema({
     default: Date.now,
   },
 
-  google_id: {
-    type: String,
-    default: null,
-  },
+  // google_id: {
+  //   type: String,
+  //   default: null,
+  // },
 
-  facebook_id: {
-    type: String,
-    default: null,
-  },
+  // facebook_id: {
+  //   type: String,
+  //   default: null,
+  // },
 
   account: {
     type: Schema.Types.ObjectId,
