@@ -54,7 +54,7 @@ const Avatar = ({ showLoginForm, setShowLoginForm, onClick }) => {
   return (
     <div className="auth-actions relative rounded-full">
       <img
-        src={avatar}
+        src={user ? user.profile_image : avatar}
         alt="Avatar"
         onClick={onClick}
         className="w-10 h-10 object-cover rounded-full cursor-pointer transition duration-300 ease-in-out bg-white"

@@ -49,7 +49,7 @@ const schema = new Schema({
 
   profile_image: {
     type: String,
-    default: "",
+    default: "https://e7.pngegg.com/pngimages/358/473/png-clipart-computer-icons-user-profile-person-child-heroes.png",
   },
 
   last_login: {

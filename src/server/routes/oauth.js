@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000/";
 
@@ -32,7 +34,6 @@ router.get("/logout", (req, res) => {
 });
 
 router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
-
 router.get(
   "/google/callback",
   passport.authenticate("google", {

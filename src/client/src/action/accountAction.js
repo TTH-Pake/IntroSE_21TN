@@ -1,12 +1,6 @@
 import axios from "axios";
 import { message } from "antd";
-// import {
-//   auth,
-//   googleprovider,
-// } from "../components/Firebase/firebase.initialize";
-// import { signInWithPopup, signOut } from "firebase/auth";
 
-//Login
 export const handleLogin = async (userData, setCookie) => {
   try {
     const result = await axios.post(
@@ -90,19 +84,32 @@ export const handleResetPassword = async (userData) => {
 //       lastLoginTime: metadata.lastSignInTime,
 //     };
 // login with google
-export const handleLoginWithGoogle1 = async () => {
-  window.open("http://127.0.0.1:8000/auth/google", "_self");
-  const result = await axios
-    .get("http://127.0.0.1:8000/auth/login/success", {
-      withCredentials: true,
-    })
-    .then((res) => {
-      console.log(res);
-      return true;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+export const handleLoginWithGoogle = async () => {
+  // Open Google OAuth in a new window
+  window.open("http://127.0.0.1:8000/auth/google", "_blank","popup=true");
+
+  // Poll your server to check if login is successful
+  let result;
+  while (!result) {
+    try {
+      result = await axios.get("http://127.0.0.1:8000/auth/login/success",{
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("result",result);
+      if (result.data.success === true) {
+        message.success("Login successful!");
+        return result.data.accessToken;
+      }
+    } catch (error) {
+      console.error(error);
+      // Wait for 2 seconds before trying again
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  }
 };
 
 // export const handleLoginWithGoogle = async () => {
