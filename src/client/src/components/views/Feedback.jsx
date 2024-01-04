@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import NavBar from "../modules/Navbar";
 import Footer from "../modules/Footer";
 import FeedbackIcon from "../../assets/feedback.png";
@@ -27,7 +28,7 @@ const FeedBack = () => {
     email: "",
     title: "",
     feedback: "",
-    satisfaction: "",
+    satisfaction: "satisfied",
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -37,20 +38,26 @@ const FeedBack = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setForm({
-      name: "",
-      address: "",
-      phoneNumber: "",
-      email: "",
-      title: "",
-      feedback: "",
-      satisfaction: "",
-    });
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/feedback", form);
+      console.log("Server response:", response);
 
-    setIsSubmitted(true);
+      setForm({
+        name: "",
+        address: "",
+        phoneNumber: "",
+        email: "",
+        title: "",
+        feedback: "",
+        satisfaction: "satisfied",
+      });
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Error sending feedback:", error);
+    }
   };
 
   const handleCloseNotification = () => {

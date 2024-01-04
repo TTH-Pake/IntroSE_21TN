@@ -17,6 +17,7 @@ const ingredientRouter = require("./routes/ingredient.js");
 const commentRouter = require("./routes/comment.js");
 const blogRouter = require("./routes/blog.js");
 const authRouter = require("./routes/auth.js");
+const feedbackRouter = require("./routes/feedback.js");
 // const authRouter = require("./routes/auth.js");
 
 const chatbotRouter = require("./routes/chatbot.js");
@@ -49,6 +50,7 @@ app.use("/", recipesRouter);
 app.use("/users", userRouter);
 app.use("/ingredients", ingredientRouter);
 app.use("/comment", commentRouter);
+app.use("/feedback", feedbackRouter);
 app.use("/", authRouter);
 db.on("error", (stream) => {
   console.log("mongodb error");
