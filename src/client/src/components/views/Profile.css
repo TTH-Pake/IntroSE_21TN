@@ -1,0 +1,12 @@
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .fas.fa-cog {
+    font-size: 100px;
+    margin-bottom: 20px;
+  }
