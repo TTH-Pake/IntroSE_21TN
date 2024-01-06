@@ -12,14 +12,16 @@ const verifyToken = require("../middleware/account");
 const mongoose = require("mongoose");
 const blogModel = require("../model/blogModel");
 const commentModel = require("../model/commentModel");
-
+const {hashPassword} = require("../utils/hash");
 // @route GET API
 // @desc GET user
 // @access private
 
 const getAllUsersControl = async (req, res) => {
   try {
-    const currentUser = await User.findOne({ account: req.userid });
+    const currentUser = await User.findOne({ account: req.userid })
+    .populate("account", ["email", "password"]);
+  
     if (!currentUser) {
       return res
         .status(403)
@@ -30,9 +32,12 @@ const getAllUsersControl = async (req, res) => {
     }
 
     // Lấy tất cả người dùng
+    
     const allUsers = await User.find({})
       .populate("account", ["email", "password"])
       .sort({ user_id: 1 });
+
+    
 
     res.status(200).json({ success: true, users: allUsers });
   } catch (error) {
@@ -212,6 +217,7 @@ const deleteUser = async (req, res) => {
 };
 const changePassword = async (req, res) => {
   const { userId, newPassword } = req.body;
+  console.log(userId, newPassword);
 
   try {
     // Find the user by user_id in the user collection
@@ -228,7 +234,8 @@ const changePassword = async (req, res) => {
     const account = await Account.findById(user.account);
 
     // Update the account's password directly without hashing
-    account.password = newPassword;
+    const hassedPassword = await hashPassword(newPassword);
+    account.password = hassedPassword;
 
     // Save the updated account document
     await account.save();

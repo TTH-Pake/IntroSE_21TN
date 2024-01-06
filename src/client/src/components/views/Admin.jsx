@@ -118,7 +118,7 @@ const Admin = () => {
 
   const handleSearch = () => {
     const foundUser = users.find(
-      (user) => user.account.email.toLowerCase() === searchTerm.toLowerCase()
+      (user) => user.account.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (foundUser) {
@@ -134,6 +134,7 @@ const Admin = () => {
     }
   };
 
+  
   return (
     <div className="home-wrapper h-screen overflow-y-auto">
       <NavBar />
@@ -177,7 +178,7 @@ const Admin = () => {
                   <th className="p-2">Gender</th>
                   <th className="p-2">Age</th>
                   <th className="p-2">Role</th>
-                  <th className="">Password</th>
+                  {/* <th className="">Password</th> */}
                   <th className="whitespace-no-wrap text-center">
                     Change Password
                   </th>
@@ -196,14 +197,14 @@ const Admin = () => {
                   <td className="p-2">{foundUser.account.email}</td>
                   <td className="p-2">{foundUser.gender}</td>
                   <td className="p-2">{foundUser.age}</td>
-                  <td className="p-2">
+                  {/* <td className="p-2">
                     {foundUser.is_admin ? "Admin" : "User"}
                   </td>
                   <td className="">
                     {foundUser.account
                       ? foundUser.account.password
                       : "No password"}
-                  </td>
+                  </td> */}
                   <td className="whitespace-no-wrap text-center">
                     {!foundUser.account.google_id &&
                     !foundUser.account.facebook_id ? (
@@ -270,7 +271,7 @@ const Admin = () => {
                 <th className="p-2">Gender</th>
                 <th className="p-2">Age</th>
                 <th className="p-2">Role</th>
-                <th className="">Password</th>
+                {/* <th className="">Password</th> */}
                 <th className="whitespace-no-wrap text-center">
                   Change Password
                 </th>
@@ -279,12 +280,12 @@ const Admin = () => {
             </thead>
             <tbody>
               {users &&
-                users.map((user) => (
-                  <tr key={user._id.$oid} className="">
+                users.map((user,index) => (
+                  <tr key={index} className="">
                     <td className="p-2">
-                      {user.account.google_id
+                      {user?.account?.google_id
                         ? "[G] "
-                        : user.account.facebook_id
+                        : user?.account?.facebook_id
                         ? "[F] "
                         : "" + user.name}
                     </td>
@@ -292,11 +293,7 @@ const Admin = () => {
                     <td className="p-2">{user.gender}</td>
                     <td className="p-2">{user.age}</td>
                     <td className="p-2">{user.is_admin ? "Admin" : "User"}</td>
-                    <td className="">
-                      {user.account.google_id || user.account.facebook_id
-                        ? "No password"
-                        : user.account.password}
-                    </td>
+                    
                     <td className="whitespace-no-wrap text-center">
                       {!user.account.google_id && !user.account.facebook_id ? (
                         showChangePassword &&
