@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { handleLogin } from "../../action/accountAction";
+import {
+  handleLogin,
+  handleLoginWithFacebook,
+} from "../../action/accountAction";
 import { handleLoginWithGoogle } from "../../action/accountAction";
 
 import Logo from "../../assets/logo-recipe.png";
@@ -50,6 +53,14 @@ export default function Login() {
 
   const onLoginWithGoogle = async () => {
     const isLoggedIn = await handleLoginWithGoogle();
+
+    if (isLoggedIn) {
+      navigate(location.state?.from || "/home");
+    }
+  };
+
+  const onLoginWithFacebook = async () => {
+    const isLoggedIn = await handleLoginWithFacebook();
 
     if (isLoggedIn) {
       navigate(location.state?.from || "/home");
@@ -138,14 +149,17 @@ export default function Login() {
                 <img src={GoogleIcon} alt="Google Icon" className="w-6 h-6" />
                 <span className="ml-2">Google</span>
               </Link>
-              <button className="btn w-[50%] py-1.5 rounded-full mt-2 text-black text-base text-center cursor-pointer bg-white hover:font-semibold hover:shadow-lg transition duration-300 flex items-center justify-center">
+              <Link
+                className="btn w-[50%] py-1.5 rounded-full mt-2 text-black text-base text-center cursor-pointer bg-white hover:font-semibold hover:shadow-lg transition duration-300 flex items-center justify-center"
+                onClick={onLoginWithFacebook}
+              >
                 <img
                   src={FacebookIcon}
                   alt="Facebook Icon"
                   className="w-6 h-6"
                 />
                 <span className="ml-2">Facebook</span>
-              </button>
+              </Link>
             </div>
 
             <Link

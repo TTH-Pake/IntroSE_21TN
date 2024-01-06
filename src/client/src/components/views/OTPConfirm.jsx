@@ -12,24 +12,13 @@ export default function OTPConfirm() {
   const [countdown, setCountdown] = useState(60);
   const [isCounting, setIsCounting] = useState(true);
 
+  const navigate = useNavigate();
   const onSubmit = (e) => {
     e.preventDefault();
-    // const userData = {
-    //   email: email,
-    //   password: password,
-    //   verifyPassword: verifyPassword,
-    // };
-
     if (otp === "") {
       message.error("Please enter OTP");
       return;
     }
-
-    // const user = {
-    //   email: email,
-    //   password: password,
-    //   otp: otp,
-    // };
 
     const data = {
       otp: otp,

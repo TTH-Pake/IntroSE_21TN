@@ -119,7 +119,7 @@ const Search = () => {
 
   return (
     <div className="container border-t mx-auto">
-      <NavBar/>
+      <NavBar />
 
       <div className="flex">
         <div className="px-3 w-1/4 p-7 mr-2">
@@ -153,7 +153,7 @@ const Search = () => {
               >
                 <span className="mr-2">Ingredients</span>
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://www.w3.org/2000/svg"
                   className="w-5 h-5 ml-2 -mr-1"
                   viewBox="0 0 20 20"
                   fill="currentColor"

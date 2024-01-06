@@ -10,6 +10,8 @@ const Blog = require("../model/blogModel");
 
 const verifyToken = require("../middleware/account");
 const mongoose = require("mongoose");
+const blogModel = require("../model/blogModel");
+const commentModel = require("../model/commentModel");
 
 // @route GET API
 // @desc GET user
@@ -184,6 +186,16 @@ const deleteUser = async (req, res) => {
     }
 
     // Xóa người dùng từ collection
+    await blogModel.deleteMany({ user_id: userId });
+    await commentModel.deleteMany({ user_id: userId });
+    const foundUser = await User.findOne({ user_id: userId });
+    if (foundUser) {
+      for (let i = 0; i < foundUser.user_recipes.length; i++) {
+        await Recipe.findOneAndDelete({
+          recipe_id: foundUser.user_recipes[i],
+        });
+      }
+    }
     await User.deleteOne({ user_id: userId });
 
     const account = await Account.findByIdAndDelete(user.account);

@@ -5,11 +5,11 @@ const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 
 const Account = require("../model/accountModel");
-const verifyToken = require("../middleware/account");
 const sendMail = require("../utils/sendMail");
 const User = require("../model/userModel");
 const Token = require("../model/tokenModel");
 const crypto = require("crypto");
+const { MailType } = require("../utils/mailType");
 
 const loginControl = async (req, res) => {
   const { email, password } = req.body;
@@ -38,7 +38,7 @@ const loginControl = async (req, res) => {
         } else {
           res
             .status(404)
-            .json({ success: false, error: "Incorrect password!" });
+            .json({ success: false, error: "Email or password is incorrect!" });
         }
       }
     })
@@ -50,53 +50,53 @@ const loginControl = async (req, res) => {
     });
 };
 
-const registerControl = async (req, res) => {
-  const { name, email, password } = req.body;
-  await Account.findOne({ email: email, google_id: null, facebook_id: null })
-    .then(async (result) => {
-      if (result) {
-        res
-          .status(409)
-          .json({ success: false, error: "Username already exists!" });
-      } else {
-        const maxUserId = await Account.estimatedDocumentCount();
-        const account = new Account({
-          user_id: maxUserId + 1,
-          email: email,
-          password: password,
-        });
+// const registerControl = async (req, res) => {
+//   const { name, email, password } = req.body;
+//   await Account.findOne({ email: email, google_id: null, facebook_id: null })
+//     .then(async (result) => {
+//       if (result) {
+//         res
+//           .status(409)
+//           .json({ success: false, error: "Username already exists!" });
+//       } else {
+//         const maxUserId = await Account.estimatedDocumentCount();
+//         const account = new Account({
+//           user_id: maxUserId + 1,
+//           email: email,
+//           password: password,
+//         });
 
-        const user = new User({
-          user_id: account.user_id,
-          name: name,
-          account: account._id,
-        });
+//         const user = new User({
+//           user_id: account.user_id,
+//           name: name,
+//           account: account._id,
+//         });
 
-        await user.save();
+//         await user.save();
 
-        account.save().then(() => {
-          const accessToken = jwt.sign(
-            { userid: account.user_id },
-            process.env.ACCESS_TOKEN_SECRET
-          );
+//         account.save().then(() => {
+//           const accessToken = jwt.sign(
+//             { userid: account.user_id },
+//             process.env.ACCESS_TOKEN_SECRET
+//           );
 
-          res.json({ success: true, message: "Register Success", accessToken });
-        });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res
-        .status(500)
-        .json({ success: false, message: "Internal server error" });
-    });
-};
+//           res.json({ success: true, message: "Register Success", accessToken });
+//         });
+//       }
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//       res
+//         .status(500)
+//         .json({ success: false, message: "Internal server error" });
+//     });
+// };
 
 const registerWithVerificationControl = async (req, res) => {
   const { name, email, password } = req.body;
-  await Account.findOne({ email: email, google_id: null, facebook_id: null })
+  await Account.findOne({ email: email })
     .then(async (result) => {
-      if (result) {
+      if (result && !result.google_id && !result.facebook_id) {
         res
           .status(409)
           .json({ success: false, error: "Username already exists!" });
@@ -131,7 +131,7 @@ const registerWithVerificationControl = async (req, res) => {
         // let link = "http://127.0.0.1:8000/account/verify/" + token.code;
         let isSentSuccessfully = await sendMail(
           email,
-          "Verify your account",
+          MailType.VERIFICATION,
           verificationCode
         );
         if (!isSentSuccessfully) {
@@ -167,7 +167,7 @@ const verifyAccountControl = async (req, res) => {
         if (!result) {
           res.status(400).json({
             success: false,
-            message: "We were unable to find a account for this token.",
+            message: "We were unable to find an account for this token.",
           });
         } else {
           result.is_verified = true;
@@ -402,7 +402,7 @@ const verifyForgotPasswordControl = async (req, res) => {
 
 module.exports = {
   loginControl,
-  registerControl,
+  // registerControl,
   registerWithVerificationControl,
   verifyAccountControl,
   forgotPasswordControl,

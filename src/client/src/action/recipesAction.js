@@ -5,7 +5,7 @@ import { message } from "antd";
 // Get recomended recipes
 export const handleRecommendedRecipes = async () => {
   try {
-    const result = await axios.get("http://127.0.0.1:8000/");
+    const result = await axios.get("https://127.0.0.1:8000/");
 
     if (result.data.success === true) {
       return result.data.recommended_recipes;
@@ -20,7 +20,7 @@ export const handleRecommendedRecipes = async () => {
 
 export const handleRankingRecipes = async () => {
   try {
-    const result = await axios.get("http://127.0.0.1:8000/home");
+    const result = await axios.get("https://127.0.0.1:8000/home");
     if (result.data.success === true) {
       return result.data.ranking_recipes;
     } else {
@@ -35,7 +35,7 @@ export const handleRankingRecipes = async () => {
 export const handleSearchRecipes = async (keywords) => {
   try {
     const result = await axios.get(
-      `http://127.0.0.1:8000/search/?keywords=${encodeURIComponent(keywords)}`
+      `https://127.0.0.1:8000/search/?keywords=${encodeURIComponent(keywords)}`
     );
     if (result.data.success === true) {
       return result.data.recipes;
@@ -50,7 +50,7 @@ export const handleSearchRecipes = async (keywords) => {
 
 export const handleSearchRecipesID = async (ID) => {
   try {
-    const result = await axios.get(`http://127.0.0.1:8000/recipes/?ID=${ID}`);
+    const result = await axios.get(`https://127.0.0.1:8000/recipes/?ID=${ID}`);
     if (result.data.success === true) {
       return result.data.recipe;
     } else {
@@ -65,7 +65,7 @@ export const handleSearchRecipesID = async (ID) => {
 export const handleCreateRecipe = async (recipe, accessToken) => {
   try {
     const result = await axios.post(
-      "http://127.0.0.1:8000/recipe/create",
+      "https://127.0.0.1:8000/recipe/create",
       { recipe: recipe }, // This is the data you're sending
       {
         headers: {
@@ -89,7 +89,7 @@ export const handleCreateRecipe = async (recipe, accessToken) => {
 export const handleGetCommentsByRecipeId = async (recipeId) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:8000/recipes/${recipeId}/comment`
+      `https://127.0.0.1:8000/recipes/${recipeId}/comment`
     );
 
     if (response.data.success) {
@@ -109,7 +109,7 @@ export const handleGetCommentsByRecipeId = async (recipeId) => {
 export const handleGetRelatedRecipes = async (recipeId) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:8000/recipes/${recipeId}/related`
+      `https://127.0.0.1:8000/recipes/${recipeId}/related`
     );
 
     if (response.data.success) {

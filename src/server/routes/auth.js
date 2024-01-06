@@ -58,53 +58,41 @@ router.get("/auth/google/callback", function (req, res, next) {
         process.env.ACCESS_TOKEN_SECRET
       );
 
-      // res.status(200).json({
-      //   success: true,
-      //   message: "successful login with googleaaa",
-      //   accessToken,
-      // });
-
       return res.redirect(CLIENT_URL + "?token=" + accessToken);
     });
   })(req, res, next);
 });
 
-// router.get(
-//   "/auth/google/callback",
-//   passport.authenticate("google", {
-//     successRedirect: CLIENT_URL,
-//     failureRedirect: "/login/failed",
-//   }),
-//   (req, res) => {
-//     res.status(200).json({
-//       success: true,
-//       message: "successful login with google",
-//       user: req.user,
-//     });
-//   }
-// );
+///////////////////////// FACEBOOK /////////////////////////
+router.get("/facebook", passport.authenticate("facebook"));
 
-// router.get("/github", passport.authenticate("github", { scope: ["profile"] }));
+router.get("/auth/facebook/callback", function (req, res, next) {
+  passport.authenticate("facebook", function (err, user, info) {
+    if (err) {
+      // Handle error
+      console.error(err);
+      return res.status(500).json({ error: "Authentication failed" });
+    }
+    if (!user) {
+      // Authentication failed
+      console.log("user: ", user);
+      console.log("info: ", info);
+      return res.redirect(CLIENT_URL + "login");
+    }
+    req.logIn(user, function (err) {
+      if (err) {
+        // Handle error
+        console.error(err);
+        return res.status(500).json({ error: "Login failed" });
+      }
+      const accessToken = jwt.sign(
+        { userid: user.account },
+        process.env.ACCESS_TOKEN_SECRET
+      );
 
-// router.get(
-//   "/github/callback",
-//   passport.authenticate("github", {
-//     successRedirect: CLIENT_URL,
-//     failureRedirect: "/login/failed",
-//   })
-// );
-
-router.get(
-  "/facebook",
-  passport.authenticate("facebook", { scope: ["profile"] })
-);
-
-router.get(
-  "/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: CLIENT_URL,
-    failureRedirect: "/login/failed",
-  })
-);
+      return res.redirect(CLIENT_URL + "?token=" + accessToken);
+    });
+  })(req, res, next);
+});
 
 module.exports = router;

@@ -5,7 +5,7 @@ import { message } from "antd";
 // Get user
 export const handleGetCurrentUser = async (accessToken) => {
   try {
-    const result = await axios.get("http://127.0.0.1:8000/users/profile", {
+    const result = await axios.get("https://127.0.0.1:8000/users/profile", {
       headers: {
         Authorization: "Bearer " + accessToken,
       },
@@ -31,7 +31,7 @@ export const handleGetAllUsers = async (accessToken) => {
     };
 
     const response = await axios.get(
-      "http://127.0.0.1:8000/users/admin",
+      "https://127.0.0.1:8000/users/admin",
       config
     );
     return response.data;
@@ -44,7 +44,7 @@ export const handleGetAllUsers = async (accessToken) => {
 export const handleGetUserByID = async (user_id) => {
   try {
     const user = await axios.get(
-      `http://127.0.0.1:8000/users/getUser/${user_id}`
+      `https://127.0.0.1:8000/users/getUser/${user_id}`
     );
 
     if (user.data.success) {
@@ -65,7 +65,7 @@ export const handleGetFavouriteRecipesUser = async (accessToken) => {
     };
 
     const favouriteRecipes = await axios.get(
-      "http://127.0.0.1:8000/users/favourites", // Update the endpoint
+      "https://127.0.0.1:8000/users/favourites", // Update the endpoint
       config
     );
 
@@ -87,7 +87,7 @@ export const handleGetRecipesUser = async (accessToken) => {
     };
 
     const recipes = await axios.get(
-      "http://127.0.0.1:8000/users/recipe-manager",
+      "https://127.0.0.1:8000/users/recipe-manager",
       config
     );
 
@@ -109,7 +109,7 @@ export const handleGetBlogUser = async (accessToken) => {
     };
 
     const blogs = await axios.get(
-      "http://127.0.0.1:8000/users/blogManager",
+      "https://127.0.0.1:8000/users/blogManager",
       config
     );
 
@@ -120,13 +120,13 @@ export const handleGetBlogUser = async (accessToken) => {
     console.error("Error fetching all users:", error.message);
     throw error;
   }
-}
+};
 
 export const handleDeleteRecipes = async (recipe_id, accessToken) => {
   try {
     // Gọi API để cập nhật trạng thái "ban" của người dùng
     const response = await axios.post(
-      "http://127.0.0.1:8000/users/deleteRecipe",
+      "https://127.0.0.1:8000/users/deleteRecipe",
       {
         recipe_id: recipe_id,
       },
@@ -138,7 +138,7 @@ export const handleDeleteRecipes = async (recipe_id, accessToken) => {
     );
 
     // Xử lý phản hồi từ server
-    
+
     if (response.data.success) {
       message.success("Recipe deleted successfully");
       // Cập nhật trạng thái của người dùng trong state hoặc component
@@ -158,7 +158,7 @@ export const updateUserProfile = async (
   try {
     // Make an API request to update the user profile with token in headers
     const response = await axios.put(
-      `http://127.0.0.1:8000/users/updateProfile/${userId}`,
+      `https://127.0.0.1:8000/users/updateProfile/${userId}`,
       updatedProfile,
       {
         headers: {
@@ -166,7 +166,6 @@ export const updateUserProfile = async (
         },
       }
     );
-  
 
     // Assuming the API response contains the updated user profile
     const updatedUserProfile = response.data;
@@ -180,25 +179,22 @@ export const updateUserProfile = async (
 
 export const handleUpdateRecipe = async (recipe_id, updatedRecipe, token) => {
   try {
-
     const response = await axios.put(
-      `http://127.0.0.1:8000/users/edit-recipe/${recipe_id}`,
+      `https://127.0.0.1:8000/users/edit-recipe/${recipe_id}`,
       updatedRecipe,
       {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
     const updatedRecipeProfile = response.data;
-    if(updatedRecipeProfile.success) {
-    return updatedRecipeProfile;
+    if (updatedRecipeProfile.success) {
+      return updatedRecipeProfile;
     }
-
   } catch (error) {
     console.error("Error updating recipe.", error.message);
     throw error;
   }
-}
-
+};
