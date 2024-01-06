@@ -36,11 +36,9 @@ export default function Login() {
 
     if(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email) === false){
     message.warning("Email is invalid");
+    return;
     }
 
-    if(password.length < 6){
-      message.warning("Password must be at least 6 characters");
-    }
     
     const userId = await handleLogin(userData, setCookie);
     if (userId) {
