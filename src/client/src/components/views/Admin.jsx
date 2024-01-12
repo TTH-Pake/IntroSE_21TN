@@ -114,36 +114,6 @@ const Admin = () => {
   };
 
   const handleBanClick = async () => {
-    // // Display confirmation dialog
-    // const confirmBan = window.confirm("Are you sure you want to delete this user?");
-  
-    // // If the user clicked "OK", confirmBan will be true
-    // if (confirmBan) {
-    //   try {
-    //     // Call API to update user's "ban" status
-    //     const response = await axios.post(
-    //       "https://127.0.0.1:8000/users/admin/deleteUser",
-    //       {
-    //         userId: userId,
-    //       },
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${accessToken}`,
-    //         },
-    //       }
-    //     );
-  
-    //     // Handle response from server
-    //     if (response.data.success) {
-    //       message.success("User deleted successfully!");
-    //       // Update user's status in state or component
-    //     } else {
-    //       console.error("Error deleting user:", response.data.message);
-    //     }
-    //   } catch (error) {
-    //     console.error("Error deleting user:", error.message);
-    //   }
-    // }
     setShowDialog(true);
   };
 
