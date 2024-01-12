@@ -353,12 +353,12 @@ const CreateRecipeForm = ({ user, accessToken }) => {
     };
 
     if (recipeName === "" || prepTime === "" || cookTime === "") {
-      notify_fail("Please fill in all fields!");
+      message.error("Please fill in all fields!");
       return;
     }
     const recipe_id = await handleCreateRecipe(recipe, accessToken);
     if (recipe_id) {
-      notify_success("Create recipe successfully!");
+      message.success("Create recipe successfully!");
       navigate(`/recipes/?ID=${recipe_id}`);
     }
   };

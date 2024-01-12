@@ -1,14 +1,37 @@
-import { useState, useEffect } from "react";
-import NavBar from "../modules/Navbar";
-import Footer from "../modules/Footer";
-import changePWImage from "/src/assets/changePW.png";
-import banImage from "/src/assets/ban.png";
-import searchIcon from "/src/assets/loupe.png";
-import { handleGetAllUsers } from "../../action/userAction";
-import axios from "axios";
 import { message } from "antd";
-import { notify_success, notify_fail, Toast_Container } from "../../toast";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { handleGetAllUsers } from "../../action/userAction";
+import { Toast_Container } from "../../toast";
+import Footer from "../modules/Footer";
+import NavBar from "../modules/Navbar";
+import banImage from "/src/assets/ban.png";
+import changePWImage from "/src/assets/changePW.png";
+import searchIcon from "/src/assets/loupe.png";
+
+const ConfirmDialog = ({ message, onConfirm, onCancel }) => {
+  return (
+    <div className="bg-green-400 p-1 rounded shadow-lg fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-50 w-64 h-40">
+      <div className="text-center">
+        <p className="text-xs mb-4 text-black font-bold">{message}</p>
+        <button 
+          onClick={onConfirm} 
+          className="bg-red-500 text-white py-1 px-1 rounded mr-1 text-xs"
+        >
+          Delete user
+        </button>
+        <button 
+          onClick={onCancel} 
+          className="bg-gray-300 text-black py-1 px-1 rounded text-xs"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
@@ -17,6 +40,7 @@ const Admin = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [foundUser, setFoundUser] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
 
   const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
   useEffect(() => {
@@ -80,7 +104,7 @@ const Admin = () => {
         setSelectedUserId(null);
         setNewPassword("");
 
-        notify_success("Password changed successfully!");
+        message.success("Password changed successfully!");
       } else {
         console.error("Error changing password:", response.data.message);
       }
@@ -89,32 +113,72 @@ const Admin = () => {
     }
   };
 
-  const handleBanClick = async (userId, accessToken) => {
-    try {
-      // Gọi API để cập nhật trạng thái "ban" của người dùng
-      const response = await axios.post(
-        "https://127.0.0.1:8000/users/admin/deleteUser",
-        {
-          userId: userId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      // Xử lý phản hồi từ server
-      if (response.data.success) {
-        notify_success("User deleted successfully!");
-        // Cập nhật trạng thái của người dùng trong state hoặc component
-      } else {
-        console.error("Error deleting user:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error.message);
-    }
+  const handleBanClick = async () => {
+    // // Display confirmation dialog
+    // const confirmBan = window.confirm("Are you sure you want to delete this user?");
+  
+    // // If the user clicked "OK", confirmBan will be true
+    // if (confirmBan) {
+    //   try {
+    //     // Call API to update user's "ban" status
+    //     const response = await axios.post(
+    //       "https://127.0.0.1:8000/users/admin/deleteUser",
+    //       {
+    //         userId: userId,
+    //       },
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${accessToken}`,
+    //         },
+    //       }
+    //     );
+  
+    //     // Handle response from server
+    //     if (response.data.success) {
+    //       message.success("User deleted successfully!");
+    //       // Update user's status in state or component
+    //     } else {
+    //       console.error("Error deleting user:", response.data.message);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error deleting user:", error.message);
+    //   }
+    // }
+    setShowDialog(true);
   };
+
+  const handleConfirm = async (userId,accessToken) => {
+    setShowDialog(false);
+      try {
+        // Call API to update user's "ban" status
+        const response = await axios.post(
+          "https://127.0.0.1:8000/users/admin/deleteUser",
+          {
+            userId: userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+  
+        // Handle response from server
+        if (response.data.success) {
+          message.success("User deleted successfully!");
+          // Update user's status in state or component
+        } else {
+          console.error("Error deleting user:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error deleting user:", error.message);
+      }
+
+  }
+
+  const handleCancel = () => {
+    setShowDialog(false);
+  }
 
   const handleSearch = () => {
     const foundUser = users.find(
@@ -197,14 +261,7 @@ const Admin = () => {
                   <td className="p-2">{foundUser.account.email}</td>
                   <td className="p-2">{foundUser.gender}</td>
                   <td className="p-2">{foundUser.age}</td>
-                  {/* <td className="p-2">
-                    {foundUser.is_admin ? "Admin" : "User"}
-                  </td>
-                  <td className="">
-                    {foundUser.account
-                      ? foundUser.account.password
-                      : "No password"}
-                  </td> */}
+                 
                   <td className="whitespace-no-wrap text-center">
                     {!foundUser.account.google_id &&
                     !foundUser.account.facebook_id ? (
@@ -244,7 +301,7 @@ const Admin = () => {
                     ) : (
                       "Can't change password"
                     )}
-                    <Toast_Container />
+                   
                   </td>
 
                   <td className="whitespace-no-wrap text-center">
@@ -337,7 +394,7 @@ const Admin = () => {
                     <td className="whitespace-no-wrap text-center">
                       <button
                         onClick={() => {
-                          handleBanClick(user.user_id, cookies.accessToken);
+                          handleBanClick();
                         }}
                         className="text-white px-2 py-1 rounded max-w-[50px]"
                       >
@@ -347,6 +404,14 @@ const Admin = () => {
                           className="w-8 h-auto"
                         />
                       </button>
+                      {
+                        showDialog && <ConfirmDialog 
+                        message="Are you sure you want to delete this user?"
+                        onConfirm={() => handleConfirm(user.user_id,cookies.accessToken)}
+                        onCancel={handleCancel}
+                        />
+                       }
+
                     </td>
                   </tr>
                 ))}

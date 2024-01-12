@@ -122,7 +122,7 @@ export const RecipeDetail = () => {
       );
 
       if (result.data.success) {
-        notify_success("Save recipes successfull!");
+        message.success("Save recipes successfull!");
         return result.data;
       } else {
         message.error(result.data.error);
