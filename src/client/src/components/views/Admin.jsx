@@ -181,9 +181,11 @@ const Admin = () => {
   }
 
   const handleSearch = () => {
+    
     const foundUser = users.find(
       (user) => user.account.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    
 
     if (foundUser) {
       setFoundUser(foundUser);
