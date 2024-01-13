@@ -9,8 +9,8 @@ import NavBar from "../modules/Navbar";
 import banImage from "/src/assets/ban.png";
 import changePWImage from "/src/assets/changePW.png";
 import searchIcon from "/src/assets/loupe.png";
-import ConfirmDialog from "../modules/ConfirmDialog";
 
+import ConfirmDialog from "../modules/ConfirmDialog";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
