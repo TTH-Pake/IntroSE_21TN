@@ -6,6 +6,7 @@ import { Pagination } from "antd";
 import { handleGetBlogUser, handleGetCurrentUser } from "../../action/userAction";
 import { useCookies } from "react-cookie";
 import Loading from "../modules/Loading";
+import ConfirmDialog from "../modules/ConfirmDialog";
 
 
 const BlogManager = () => {
@@ -14,7 +15,7 @@ const BlogManager = () => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentBlogPosts, setCurrentBlogPosts] = useState([]);
-
+  const [showDialog, setShowDialog] = useState(false);
 
   const fetchCurrentBlogPosts = (page, pageSize) => {
     const start = (page - 1) * pageSize;

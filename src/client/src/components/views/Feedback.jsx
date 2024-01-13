@@ -46,7 +46,7 @@ const FeedBack = () => {
         "https://127.0.0.1:8000/feedback",
         form
       );
-      console.log("Server response:", response);
+    
 
       setForm({
         name: "",

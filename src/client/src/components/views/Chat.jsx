@@ -107,7 +107,7 @@ const Chat = () => {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Nhập tại đây..."
+              placeholder="Typing here..."
               className="flex-1 outline-none border-none ml-2"
             />
             <button

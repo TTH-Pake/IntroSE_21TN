@@ -12,6 +12,7 @@ import {
   handleGetRecipesUser,
   handleDeleteRecipes,
 } from "../../action/userAction";
+import ConfirmDialog from "../modules/ConfirmDialog";
 
 const Recipe = (recipe) => {
   const navigate = useNavigate();
@@ -19,7 +20,22 @@ const Recipe = (recipe) => {
     navigate(`/edit-recipe/${recipe.recipe_id}`);
   };
 
+  const [showDialog, setShowDialog] = useState(false);
+
   const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+
+  const handleCancel = () => {
+    setShowDialog(false);
+  };
+  const handleConfirm = (recipe_id, accessToken) => {
+    setShowDialog(false);
+    handleDeleteRecipes(recipe_id, accessToken);
+  };
+
+  const handleDelete = (recipe_id, accessToken) => {
+    setShowDialog(true);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
       <div className="bg-white rounded-lg shadow pl-10 h-64 grid grid-cols-4 w-2/3 items-center justify-center ">
@@ -30,7 +46,7 @@ const Recipe = (recipe) => {
               key={recipe.recipe_id}
             >
               <img
-                  className="object-cover h-48 w-full rounded transform transition duration-500 hover:scale-105"
+                className="object-cover h-48 w-full rounded transform transition duration-500 hover:scale-105"
                 src={recipe.img_src}
                 alt=""
               />
@@ -67,12 +83,19 @@ const Recipe = (recipe) => {
 
           <button
             className="bg-white-300 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded"
-            onClick={() =>
-              handleDeleteRecipes(recipe.recipe_id, cookies.accessToken)
-            }
+            onClick={() => handleDelete(recipe.recipe_id, cookies.accessToken)}
           >
             <img className="h-10 w-10" src={deleteIcon} alt="" />
           </button>
+          {showDialog && (
+            <ConfirmDialog
+              message="Are you sure you want to delete this recipe?"
+              onConfirm={() =>
+                handleConfirm(recipe.recipe_id, cookies.accessToken)
+              }
+              onCancel={handleCancel}
+            />
+          )}
         </div>
       </div>
     </div>
