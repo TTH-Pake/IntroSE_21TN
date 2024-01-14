@@ -11,6 +11,7 @@ import deleteICon from "../../assets/trash_can.svg";
 import { notify_fail, notify_success, Toast_Container } from "../../toast";
 import Footer from "../modules/Footer";
 import NavBar from "../modules/Navbar";
+import UploadAndDisplayImage from "../modules/UploadAndDisplayImage";
 
 const Ingredient = ({
   index,
@@ -179,6 +180,8 @@ const GeneralInfo = ({
             }}
           />
         </div>
+
+        {/* <UploadAndDisplayImage /> */}
 
         <IngredientsList
           ingredients={ingredients}
@@ -353,12 +356,11 @@ const CreateRecipeForm = ({ user, accessToken }) => {
     };
 
     if (recipeName === "" || prepTime === "" || cookTime === "") {
-      notify_fail("Please fill in all fields!");
+      message.error("Please fill in all fields!");
       return;
     }
     const recipe_id = await handleCreateRecipe(recipe, accessToken);
     if (recipe_id) {
-      notify_success("Create recipe successfully!");
       navigate(`/recipes/?ID=${recipe_id}`);
     }
   };

@@ -4,7 +4,7 @@ import { message } from "antd";
 export const handleLogin = async (userData, setCookie) => {
   try {
     const result = await axios.post(
-      "http://127.0.0.1:8000/account/login",
+      "https://127.0.0.1:8000/account/login",
       userData
     );
 
@@ -29,7 +29,7 @@ export const handleLogin = async (userData, setCookie) => {
 export const handleRegister = async (userData) => {
   try {
     const result = await axios.post(
-      "http://127.0.0.1:8000/account/register",
+      "https://127.0.0.1:8000/account/register",
       userData
     );
     if (result.data.success == true) {
@@ -47,7 +47,7 @@ export const handleRegister = async (userData) => {
 export const handleSubmitOTP = async (data) => {
   try {
     const result = await axios.post(
-      "http://127.0.0.1:8000/account/register/verify",
+      "https://127.0.0.1:8000/account/register/verify",
       data
     );
     if (result.data.success == true) {
@@ -66,7 +66,7 @@ export const handleSubmitOTP = async (data) => {
 export const handleResetPassword = async (userData) => {
   try {
     const result = await axios.put(
-      "http://127.0.0.1:8000/account/resetPassword",
+      "https://127.0.0.1:8000/account/resetPassword",
       userData
     );
     if (result.data.success == true) {
@@ -83,9 +83,9 @@ export const handleResetPassword = async (userData) => {
 
 // login with google
 export const handleLoginWithGoogle = async () => {
-  window.open("http://127.0.0.1:8000/google", "_self");
+  window.open("https://127.0.0.1:8000/google", "_self");
   // const result = await axios
-  //   .get("http://127.0.0.1:8000//auth/google/callback", {
+  //   .get("https://127.0.0.1:8000//auth/google/callback", {
   //     withCredentials: true,
   //   })
   //   .then((res) => {
@@ -97,6 +97,10 @@ export const handleLoginWithGoogle = async () => {
   //     console.log("no");
   //     console.log(err);
   //   });
+};
+
+export const handleLoginWithFacebook = async () => {
+  window.open("https://127.0.0.1:8000/facebook", "_self");
 };
 
 export const handleLogout = (removeCookie) => {

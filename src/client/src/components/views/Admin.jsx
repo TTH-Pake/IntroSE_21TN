@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
-import NavBar from "../modules/Navbar";
-import Footer from "../modules/Footer";
-import changePWImage from "/src/assets/changePW.png";
-import banImage from "/src/assets/ban.png";
-import searchIcon from "/src/assets/loupe.png";
-import { handleGetAllUsers } from "../../action/userAction";
-import axios from "axios";
 import { message } from "antd";
-import { notify_success, notify_fail, Toast_Container } from "../../toast";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { handleGetAllUsers } from "../../action/userAction";
+import { Toast_Container } from "../../toast";
+import Footer from "../modules/Footer";
+import NavBar from "../modules/Navbar";
+import banImage from "/src/assets/ban.png";
+import changePWImage from "/src/assets/changePW.png";
+import searchIcon from "/src/assets/loupe.png";
+
+import ConfirmDialog from "../modules/ConfirmDialog";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
@@ -17,6 +19,7 @@ const Admin = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [foundUser, setFoundUser] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
 
   const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
   useEffect(() => {
@@ -53,7 +56,7 @@ const Admin = () => {
       }
       // Gửi yêu cầu đổi mật khẩu trực tiếp
       const response = await axios.post(
-        "http://127.0.0.1:8000/users/admin/changepassword",
+        "https://127.0.0.1:8000/users/admin/changepassword",
         {
           userId: selectedUserId,
           newPassword: newPassword,
@@ -80,7 +83,7 @@ const Admin = () => {
         setSelectedUserId(null);
         setNewPassword("");
 
-        notify_success("Password changed successfully!");
+        message.success("Password changed successfully!");
       } else {
         console.error("Error changing password:", response.data.message);
       }
@@ -89,37 +92,49 @@ const Admin = () => {
     }
   };
 
-  const handleBanClick = async (userId, accessToken) => {
-    try {
-      // Gọi API để cập nhật trạng thái "ban" của người dùng
-      const response = await axios.post(
-        "http://127.0.0.1:8000/users/admin/deleteUser",
-        {
-          userId: userId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      // Xử lý phản hồi từ server
-      if (response.data.success) {
-        notify_success("User deleted successfully!");
-        // Cập nhật trạng thái của người dùng trong state hoặc component
-      } else {
-        console.error("Error deleting user:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error.message);
-    }
+  const handleBanClick = async () => {
+    setShowDialog(true);
   };
 
+  const handleConfirm = async (userId,accessToken) => {
+    setShowDialog(false);
+      try {
+        // Call API to update user's "ban" status
+        const response = await axios.post(
+          "https://127.0.0.1:8000/users/admin/deleteUser",
+          {
+            userId: userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+  
+        // Handle response from server
+        if (response.data.success) {
+          message.success("User deleted successfully!");
+          // Update user's status in state or component
+        } else {
+          console.error("Error deleting user:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error deleting user:", error.message);
+      }
+
+  }
+
+  const handleCancel = () => {
+    setShowDialog(false);
+  }
+
   const handleSearch = () => {
+    
     const foundUser = users.find(
-      (user) => user.account.email.toLowerCase() === searchTerm.toLowerCase()
+      (user) => user.account.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    
 
     if (foundUser) {
       setFoundUser(foundUser);
@@ -134,10 +149,7 @@ const Admin = () => {
     }
   };
 
-  const handleDeleteUser = (userId) => {
-   
-  };
-
+  
   return (
     <div className="home-wrapper h-screen overflow-y-auto">
       <NavBar />
@@ -181,7 +193,7 @@ const Admin = () => {
                   <th className="p-2">Gender</th>
                   <th className="p-2">Age</th>
                   <th className="p-2">Role</th>
-                  <th className="">Password</th>
+                  {/* <th className="">Password</th> */}
                   <th className="whitespace-no-wrap text-center">
                     Change Password
                   </th>
@@ -190,28 +202,20 @@ const Admin = () => {
               </thead>
               <tbody>
                 <tr key={foundUser._id.$oid} className="">
-                  <td className="p-2">{foundUser.name}</td>
                   <td className="p-2">
-                    {foundUser.account
-                      ? foundUser.account.email
-                      : foundUser.google_id
-                      ? "Google Account"
-                      : foundUser.facebook_id
-                      ? "Facebook Account"
-                      : "Cant find email"}
+                    {foundUser.account.google_id
+                      ? "[G] "
+                      : foundUser.account.facebook_id
+                      ? "[F] "
+                      : "" + foundUser.name}
                   </td>
+                  <td className="p-2">{foundUser.account.email}</td>
                   <td className="p-2">{foundUser.gender}</td>
                   <td className="p-2">{foundUser.age}</td>
-                  <td className="p-2">
-                    {foundUser.is_admin ? "Admin" : "User"}
-                  </td>
-                  <td className="">
-                    {foundUser.account
-                      ? foundUser.account.password
-                      : "No password"}
-                  </td>
+                 
                   <td className="whitespace-no-wrap text-center">
-                    {foundUser.account ? (
+                    {!foundUser.account.google_id &&
+                    !foundUser.account.facebook_id ? (
                       showChangePassword &&
                       selectedUserId === foundUser.user_id ? (
                         <div className="flex justify-center items-center ">
@@ -248,7 +252,7 @@ const Admin = () => {
                     ) : (
                       "Can't change password"
                     )}
-                    <Toast_Container />
+                   
                   </td>
 
                   <td className="whitespace-no-wrap text-center">
@@ -275,7 +279,7 @@ const Admin = () => {
                 <th className="p-2">Gender</th>
                 <th className="p-2">Age</th>
                 <th className="p-2">Role</th>
-                <th className="">Password</th>
+                {/* <th className="">Password</th> */}
                 <th className="whitespace-no-wrap text-center">
                   Change Password
                 </th>
@@ -283,73 +287,85 @@ const Admin = () => {
               </tr>
             </thead>
             <tbody>
-              {users && users.map((user) => (
-                <tr key={user._id.$oid} className="">
-                  <td className="p-2">{user.name}</td>
-                  <td className="p-2">
-                    {user.account
-                      ? user.account.email
-                      : user.google_id
-                        ? "Google Account"
-                        : user.facebook_id
-                          ? "Facebook Account"
-                          : "Cant find email"}
-                  </td>
-                  <td className="p-2">{user.gender}</td>
-                  <td className="p-2">{user.age}</td>
-                  <td className="p-2">{user.is_admin ? "Admin" : "User"}</td>
-                  <td className="">
-                    {user.account ? user.account.password : "No password"}
-                  </td>
-                  <td className="whitespace-no-wrap text-center">
-                    {user.account ? (
-                      showChangePassword && selectedUserId === user.user_id ? (
-                        <div className="flex justify-center items-center ">
-                          <input
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            className="border p-1 mr-1.5 rounded max-w-[180px]"
-                            placeholder="New password..."
-                          />
+              {users &&
+                users.map((user,index) => (
+                  <tr key={index} className="">
+                    <td className="p-2">
+                      {user?.account?.google_id
+                        ? "[G] "
+                        : user?.account?.facebook_id
+                        ? "[F] "
+                        : "" + user.name}
+                    </td>
+                    <td className="p-2">{user.account.email}</td>
+                    <td className="p-2">{user.gender}</td>
+                    <td className="p-2">{user.age}</td>
+                    <td className="p-2">{user.is_admin ? "Admin" : "User"}</td>
+                    
+                    <td className="whitespace-no-wrap text-center">
+                      {!user.account.google_id && !user.account.facebook_id ? (
+                        showChangePassword &&
+                        selectedUserId === user.user_id ? (
+                          <div className="flex justify-center items-center ">
+                            <input
+                              type="password"
+                              value={newPassword}
+                              onChange={(e) => setNewPassword(e.target.value)}
+                              className="border p-1 mr-1.5 rounded max-w-[180px]"
+                              placeholder="New password..."
+                            />
+                            <button
+                              onClick={() => {
+                                handleChangePasswordClick(cookies.accessToken);
+                              }}
+                              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        ) : (
                           <button
-                            onClick={() => {
-                              handleChangePasswordClick(cookies.accessToken);
-                            }}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded"
+                            onClick={() =>
+                              handleShowChangePassword(user.user_id)
+                            }
+                            className="text-white px-2 py-1 rounded max-w-[50px]"
                           >
-                            Save
+                            <img
+                              src={changePWImage}
+                              alt="Change Password"
+                              className="w-7 h-auto"
+                            />
                           </button>
-                        </div>
+                        )
                       ) : (
-                        <button
-                          onClick={() => handleShowChangePassword(user.user_id)}
-                          className="text-white px-2 py-1 rounded max-w-[50px]"
-                        >
-                          <img
-                            src={changePWImage}
-                            alt="Change Password"
-                            className="w-7 h-auto"
-                          />
-                        </button>
-                      )
-                    ) : (
-                      "Can't change password"
-                    )}
-                    <Toast_Container />
-                  </td>
-                  <td className="whitespace-no-wrap text-center">
-                    <button
-                      onClick={() => {
-                        handleBanClick(user.user_id, cookies.accessToken);
-                      }}
-                      className="text-white px-2 py-1 rounded max-w-[50px]"
-                    >
-                      <img src={banImage} alt="Delete" className="w-8 h-auto" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                        "Can't change password"
+                      )}
+                      <Toast_Container />
+                    </td>
+                    <td className="whitespace-no-wrap text-center">
+                      <button
+                        onClick={() => {
+                          handleBanClick();
+                        }}
+                        className="text-white px-2 py-1 rounded max-w-[50px]"
+                      >
+                        <img
+                          src={banImage}
+                          alt="Delete"
+                          className="w-8 h-auto"
+                        />
+                      </button>
+                      {
+                        showDialog && <ConfirmDialog 
+                        message="Are you sure you want to delete this user?"
+                        onConfirm={() => handleConfirm(user.user_id,cookies.accessToken)}
+                        onCancel={handleCancel}
+                        />
+                       }
+
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         )}

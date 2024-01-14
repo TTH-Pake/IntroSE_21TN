@@ -2,7 +2,42 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 
-const sendMail = async (email, subject, code) => {
+const verificationMailTemplate = (code) => {
+  return `
+  <div>
+  <h1>Verify your account</h1>
+  <p>Your verification code is: <strong>${code}</strong></p>
+  <p>This code will expire in 10 minutes</p>
+  <p>Thanks</p>
+  <p>Love Cook</p>
+  </div>
+  `;
+};
+
+const resetPasswordMailTemplate = (code) => {
+  return `
+  <div>
+  <h1>Reset your password</h1>
+  <p>Your reset code is: <strong>${code}</strong></p>
+  <p>This code will expire in 10 minutes</p>
+  <p>Thanks</p>
+  <p>Love Cook</p>
+  </div>
+  `;
+};
+
+const feedBackTemplate = (email_body) => {
+  return `
+  <div>
+  <h1>Feedback</h1>
+  <p>${email_body}</p>
+  <p>Thanks</p>
+  <p>Love Cook</p>
+  </div>
+  `;
+};
+
+const sendMail = async (email, mailType, content) => {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
@@ -15,31 +50,25 @@ const sendMail = async (email, subject, code) => {
       },
     });
 
+    let subject = "";
+    let html = "";
+    if (mailType === "verification") {
+      subject = "Verify your account";
+      html = verificationMailTemplate(content);
+    } else if (mailType === "resetPassword") {
+      subject = "Reset your password";
+      html = resetPasswordMailTemplate(content);
+    } else if (mailType === "feedback") {
+      subject = "Feedback";
+      html = feedBackTemplate(content);
+    }
+
     await transporter.sendMail({
       from: process.env.USER,
       to: email,
       subject: subject,
       text: subject,
-      // html: `
-      // <div>
-      // <h1>Verify your account</h1>
-      // <p>Click this <a href="${link}">link</a> to verify your account</p>
-      // <p> Or copy this link to your browser</p>
-      // <p>${link}</p>
-      // <p>This link will expire in 10 minutes</p>
-      // <p>Thanks</p>
-      // <p>Love Cook</p>
-      // </div>
-      // `,
-      html: `
-      <div>
-      <h1>${subject}</h1>
-      <p>Your verification code is: <strong>${code}</strong></p>
-      <p>This code will expire in 10 minutes</p>
-      <p>Thanks</p>
-      <p>Love Cook</p>
-      </div>
-      `,
+      html: html,
     });
     console.log("email sent successfully");
     return true;

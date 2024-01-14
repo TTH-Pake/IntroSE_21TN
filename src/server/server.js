@@ -1,5 +1,7 @@
 require("dotenv").config();
 const express = require("express");
+const https = require("https");
+const fs = require("fs");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -7,7 +9,7 @@ const cookieSession = require("cookie-session");
 const session = require("express-session");
 const passportSetup = require("./config/passport/passport.js");
 const passport = require("passport");
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 const mongoose = require("mongoose");
 const accountRouter = require("./routes/account");
@@ -22,6 +24,12 @@ const feedbackRouter = require("./routes/feedback.js");
 
 const chatbotRouter = require("./routes/chatbot.js");
 const db = require("./db/index");
+
+// This line is from the Node.js HTTPS documentation.
+var options = {
+  key: fs.readFileSync("./cert/agent2-key.pem"),
+  cert: fs.readFileSync("./cert/agent2-cert.pem"),
+};
 
 const app = express();
 app.use(express.json());
@@ -56,6 +64,10 @@ db.on("error", (stream) => {
   console.log("mongodb error");
 });
 
-app.listen(8000, () => {
+https.createServer(options, app).listen(8000, () => {
   console.log(`Node API app is running on port 8000`);
 });
+
+// app.listen(8000, () => {
+//   console.log(`Node API app is running on port 8000`);
+// });

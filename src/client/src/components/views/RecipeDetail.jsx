@@ -39,7 +39,7 @@ export const RecipeDetail = () => {
   const [userRating, setUserRating] = React.useState(0);
 
   const handleRatingChange = (rating) => {
-    if(recipe.rating === 0) {
+    if (recipe.rating === 0) {
       recipe.rating = rating;
     }
     setUserRating(rating);
@@ -112,7 +112,7 @@ export const RecipeDetail = () => {
       }
 
       const result = await axios.post(
-        `http://127.0.0.1:8000/users/favourites`,
+        `https://127.0.0.1:8000/users/favourites`,
         { recipeId },
         {
           headers: {
@@ -122,7 +122,7 @@ export const RecipeDetail = () => {
       );
 
       if (result.data.success) {
-        notify_success("Save recipes successfull!");
+        message.success("Save recipes successfull!");
         return result.data;
       } else {
         message.error(result.data.error);

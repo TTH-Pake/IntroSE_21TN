@@ -444,7 +444,7 @@ const UpdateRecipeForm = ({ recipe_id, accessToken }) => {
     );
 
     if (updateRecipe) {
-      notify_success("Update recipe successfully!");
+      message.success("Update recipe successfully!");
       navigate(`/recipes/?ID=${recipe_id}`);
     }
   };

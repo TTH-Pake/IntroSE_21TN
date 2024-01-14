@@ -1,7 +1,7 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 
-const salt = process.env.SALT;
+const salt = parseInt(process.env.SALT,10);
 
 // generate hash password
 const hashPassword = async (password) => {

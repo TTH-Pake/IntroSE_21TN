@@ -12,7 +12,7 @@ const CommentInput = ({ recipeId, userId, onCommentSubmit }) => {
         const content = comment;
         setComment("");
 
-        const response = await axios.post("http://127.0.0.1:8000/comment", {
+        const response = await axios.post("https://127.0.0.1:8000/comment", {
           user_id: userId,
           recipe_id: recipeId,
           content: content,

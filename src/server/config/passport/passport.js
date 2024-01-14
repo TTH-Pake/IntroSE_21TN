@@ -18,28 +18,6 @@ passport.use(
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
-        //   const user = await User.findOne({ google_id: profile.id });
-        //   if (user) {
-        //     return done(null, user);
-        //   }
-        //   const maxUserId = await User.estimatedDocumentCount();
-
-        //   const newUser = new User({
-        //     user_id: maxUserId + 1,
-        //     google_id: profile.id,
-        //     name: profile.displayName,
-        //     // email: profile.emails[0].value,
-        //     profile_image: profile.photos[0].value,
-        //     gender: "other",
-        //     is_admin: false,
-        //   });
-
-        //   await newUser.save();
-        //   return done(null, newUser);
-        // } catch (error) {
-        //   console.log(error);
-        //   return done(error, null);
-        // }
         const account = await Account.findOne({ google_id: profile.id });
         if (account) {
           const user = await User.findOne({ account: account._id });
@@ -52,28 +30,19 @@ passport.use(
           user_id: maxUserId + 1,
           email: profile.emails[0].value,
           google_id: profile.id,
-          name: profile.displayName,
-          avatar: profile.photos[0].value,
-          profile_image : "https://e7.pngegg.com/pngimages/358/473/png-clipart-computer-icons-user-profile-person-child-heroes.png",
-          gender: "other",
-          is_admin: false,
         });
 
         const user = new User({
           user_id: maxUserId + 1,
           name: profile.displayName,
+          profile_image: profile.photos[0].value,
+          is_admin: false,
           account: newAccount._id,
         });
 
         await user.save();
         await newAccount.save();
         return done(null, user);
-
-        // account.save().then(() => {
-        //   const accessToken = jwt.sign(
-        //     { userid: account.user_id },
-        //     process.env.ACCESS_TOKEN_SECRET
-        //   );
       } catch (error) {
         console.log(error);
         return done(error, null);
@@ -82,16 +51,46 @@ passport.use(
   )
 );
 
-
 passport.use(
   new FacebookStrategy(
     {
       clientID: FACEBOOK_APP_ID,
       clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL: "/auth/facebook/callback",
+      callbackURL: process.env.SERVER_URL + "auth/facebook/callback",
+      profileFields: ["id", "displayName", "photos", "email"],
     },
-    function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
+    async function (accessToken, refreshToken, profile, cb) {
+      try {
+        const account = await Account.findOne({
+          facebook_id: profile.id,
+        });
+        if (account) {
+          const user = await User.findOne({ account: account._id });
+          return cb(null, user);
+        }
+        console.log("profile: ", profile);
+        console.log("profile.picture: ", profile._json.picture);
+        const maxUserId = await Account.estimatedDocumentCount();
+        const newAccount = new Account({
+          user_id: maxUserId + 1,
+          email: `facebookaccount${maxUserId + 1}@gmail.com`,
+          facebook_id: profile.id,
+        });
+
+        const user = new User({
+          user_id: maxUserId + 1,
+          name: profile.displayName,
+          is_admin: false,
+          account: newAccount._id,
+        });
+
+        await user.save();
+        await newAccount.save();
+        return cb(null, user);
+      } catch (error) {
+        console.log(error);
+        return cb(error, null);
+      }
     }
   )
 );

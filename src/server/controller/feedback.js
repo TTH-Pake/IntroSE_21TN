@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const sendFeedback = require("../utils/sendFeedback");
+const sendMail = require("../utils/sendMail");
+const { MailType } = require("../utils/mailType");
 
 const createFeedbackControl = async (req, res) => {
   const feedback = req.body;
@@ -16,24 +18,27 @@ const createFeedbackControl = async (req, res) => {
       <p>Satisfaction: ${feedback.satisfaction}</p>
     `;
 
-    const emailSent = await sendFeedback(process.env.USER, emailSubject, emailBody);
+    const emailSent = await sendMail(
+      process.env.USER,
+      MailType.FEEDBACK,
+      emailBody
+    );
 
     if (!emailSent) {
-        return res.status(500).json({
-            success: false,
-            message: "Error sending feedback mail",
-        });
+      return res.status(500).json({
+        success: false,
+        message: "Error sending feedback mail",
+      });
     }
-        return res.status(200).send({
-        success: true,
-        message: "Feedback submitted successfully",
+    return res.status(200).send({
+      success: true,
+      message: "Feedback submitted successfully",
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
-}
+};
 module.exports = {
-    createFeedbackControl,
+  createFeedbackControl,
 };

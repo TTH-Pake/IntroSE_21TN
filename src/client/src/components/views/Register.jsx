@@ -28,8 +28,18 @@ export default function Register() {
       return;
     }
 
+    if(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email) === false){
+      message.warning("Email is invalid");
+      return;
+      }
+
     if (password.length < 6) {
       message.warning("Password must be at least 6 characters!");
+      return;
+    }
+
+    if(password.length > 20){
+      message.warning("Password must be at most 20 characters!");
       return;
     }
 
