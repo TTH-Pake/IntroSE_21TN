@@ -24,15 +24,9 @@ export default function OTPConfirm() {
       otp: otp,
     };
 
-<<<<<<< HEAD:client/src/components/views/OTPConfirm.jsx
-
-    navigate("/login");
-    
-=======
     if (handleSubmitOTP(data)) {
       navigate("/login");
     }
->>>>>>> 8406020e19da36f94645ab514291144b873cb8a9:src/client/src/components/views/OTPConfirm.jsx
   };
 
   useEffect(() => {
